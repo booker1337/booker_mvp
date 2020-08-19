@@ -4,6 +4,8 @@ const User = require('../../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+// Route: /api/auth
+
 router.post('/signup', async (req, res) => {
 	const { username, name, password } = req.body;
 	const user = await User.create({username, name, password});
