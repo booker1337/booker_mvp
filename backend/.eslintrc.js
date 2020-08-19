@@ -2,28 +2,29 @@ module.exports = {
 	'env': {
 		'commonjs': true,
 		'es2020': true,
-		'node': true
+		'node': true,
 	},
 	'extends': 'eslint:recommended',
 	'parserOptions': {
-		'ecmaVersion': 11
+		'ecmaVersion': 11,
 	},
 	'rules': {
 		'indent': [
 			'error',
-			'tab'
+			'tab',
 		],
 		'linebreak-style': [
 			'error',
-			'windows'
+			'windows',
 		],
 		'quotes': [
 			'error',
-			'single'
+			'single',
 		],
 		'semi': [
 			'error',
-			'always'
-		]
-	}
+			'always',
+		],
+		'comma-dangle': ['error', 'always-multiline'],
+	},
 };

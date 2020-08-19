@@ -91,9 +91,9 @@ To check your code style
 ```
 npm run lint
 ```
-To fix all your errors automatically
+To check your code style and fix all errors which can be automatically fixed
 ```
-npm run lint --fix
+npm run lint:fix
 ```
 
 ### Setting up Environment Variables

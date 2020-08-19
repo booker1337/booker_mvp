@@ -12,5 +12,5 @@ module.exports = {
 	error: (...params) => {
 		if (!process.env.LOGGER_LEVEL.match(/^(|silly|info|error)$/i)) return;
 		console.error(chalk.bgRed.black(...params));
-	}
+	},
 };
