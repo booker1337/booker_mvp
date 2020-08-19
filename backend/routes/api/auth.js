@@ -8,8 +8,9 @@ const bcrypt = require('bcrypt');
 
 router.post('/signup', async (req, res) => {
 	const { username, name, password } = req.body;
-	const user = await User.create({username, name, password});
-	res.status(201).json(user);
+	await User.create({username, name, password});
+	// Code for sending E-Mail here
+	res.sendStatus(201);
 });
 
 router.post('/login', async (req, res) => {
