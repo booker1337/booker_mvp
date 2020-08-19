@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const uniqueValidatorPlugin = require('mongoose-unique-validator');
 
 const userSchema = new mongoose.Schema({
 	name: String,
@@ -17,6 +18,8 @@ const userSchema = new mongoose.Schema({
 		default: false,
 	},
 });
+
+userSchema.plugin(uniqueValidatorPlugin);
 
 userSchema.pre('save', function (next) {
 	if(!this.isModified('password')) return next();
