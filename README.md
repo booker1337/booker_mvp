@@ -3,6 +3,7 @@
 # Contents
 - [📕 Booker](#-booker)
 - [Contents](#contents)
+- [Prerequisites](#prerequisites)
 - [Frontend](#frontend)
 	- [Commands](#commands)
 		- [Starting the Server](#starting-the-server)
@@ -24,7 +25,11 @@
 		- [Real-time logs](#real-time-logs)
 		- [Heroku Environment Variables](#heroku-environment-variables)
 
+# Prerequisites
+Make sure you have Node.js installed
+
 Make sure to change your `npm` shell to git's bash before running these commands
+
 ```
 npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
 ```
@@ -92,7 +97,7 @@ npm run lint --fix
 ```
 
 ### Setting up Environment Variables
-Go to [.env.example](./backend/.env.example)
+Go to [.env.example](./backend/.env.example), copy it, and rename the copy to `.env`
 and fill out the .env variables
 ```
 DB_URI="<insert your URI here>"

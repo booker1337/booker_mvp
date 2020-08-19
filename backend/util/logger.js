@@ -6,7 +6,7 @@ module.exports = {
 		console.log(...params);
 	},
 	info: (...params) => {
-		if (!process.env.LOGGER_LEVEL.match(/^(|info|error)$/i)) return;
+		if (!process.env.LOGGER_LEVEL.match(/^(|info|silly)$/i)) return;
 		console.log(...params);
 	},
 	error: (...params) => {

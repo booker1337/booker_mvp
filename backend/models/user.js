@@ -14,24 +14,24 @@ const userSchema = new mongoose.Schema({
 	}
 });
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
 	if(!this.isModified('password')) return next();
 
-	bcrypt.hash(this.password, 6, (err, hash) => {
-		if(err) return next(err);
+	bcrypt.hash(this.password, 10, (err, hash) => {
+		if (err) return next(err);
 		this.password = hash;
 		next();
 	});
 });
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
 	var obj = this.toObject();
 	delete obj.password;
 	return obj;
 };
 
-userSchema.methods.validatePassword = function(password, cb) {
-	bcrypt.compare(password, this.password, function(err, res) {
+userSchema.methods.validatePassword = function (password, cb) {
+	bcrypt.compare(password, this.password, (err, res) => {
 		if(err) return cb(err);
 		cb(null, res);
 	});

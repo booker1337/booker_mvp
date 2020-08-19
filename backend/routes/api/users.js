@@ -1,11 +1,13 @@
 const router = require('express').Router();
 const User = require('../../models/user');
-const auth = require('../../util/authorization');
+const { checkAuthToken } = require('./../../util/middleware')
 
-router.use(auth.authenticate);
-router.get('/', auth.checkAuth , async (req, res) => {
+router.use(checkAuthToken);
+
+router.get('/' , async (req, res) => {
 	try {
-		let user = await User.findById(req.user._id);
+		console.log(req.token)
+		let user = await User.findById(req.token.user._id);
 		res.json({ user });
 	} catch(err) {
 		res.status(401).send('1 unauthorized');
