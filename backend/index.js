@@ -2,7 +2,6 @@ const path = require('path')
 const config = require('./config');
 const logger = require('./util/logger');
 const express = require('express');
-
 const app = express();
 require('express-async-errors');
 const { requestLogger, errorHandler } = require('./util/middleware');
