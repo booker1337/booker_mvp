@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import authService from '../utils/authService';
+import Home from "./containers/Home";
 
 const PrivateRoute = ({ cb, ...rest }) => (
   <Route {...rest}
@@ -30,9 +31,10 @@ function App() {
       
       <Router>
         <Switch>
-          <Route exact path="/" render={props => <div>Landing Page</div>} />
+        <Route exact path="/">
+            <Home />
+        </Route>
           <Route path="/login" render={props => <div>Login Page</div>} />
-          <Route path="/signup" render={props => <div>Signup Page</div>} />
           <Route path="/onboarding" render={props => <div>Onboarding Page</div>} />
           <PrivateRoute
             exact
