@@ -26,7 +26,7 @@
     "dev": "nodemon index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build:ui": "npm install && rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
+    "build:ui": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
     "deploy": "cd .. && git subtree push --prefix backend heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m \"Deploying to Heroku\" && npm run deploy"
   },
