@@ -25,6 +25,13 @@ module.exports = {
 			'error',
 			'always',
 		],
-		'comma-dangle': ['error', 'always-multiline'],
+		'comma-dangle': [
+			'error', 
+			'always-multiline',
+		],
+		'no-unused-vars': [
+			'error', 
+			{ 'argsIgnorePattern': '^_' },
+		],
 	},
 };
