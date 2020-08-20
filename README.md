@@ -3,6 +3,8 @@
 # Contents
 - [📕 Booker](#-booker)
 - [Contents](#contents)
+- [Contributing](#contributing)
+- [Trello](#trello)
 - [Prerequisites](#prerequisites)
 - [Frontend](#frontend)
 	- [Commands](#commands)
@@ -24,6 +26,12 @@
 		- [Creating a heroku app.](#creating-a-heroku-app)
 		- [Real-time logs](#real-time-logs)
 		- [Heroku Environment Variables](#heroku-environment-variables)
+
+# Contributing
+[Read the CONTRIBUTING.md](./CONTRIBUTING.md)
+
+# Trello
+[Trello Link](https://trello.com/b/3iFDHmdb/booker)
 
 # Prerequisites
 Make sure you have Node.js installed
