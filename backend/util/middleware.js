@@ -2,12 +2,12 @@ const config = require('./../config');
 const logger = require('./logger');
 const jwt = require('jsonwebtoken');
 
-const requestLogger = (req, res, next) => {
+const requestLogger = (req, _res, next) => {
 	logger.silly(`${req.method} ${req.path} ${JSON.stringify(req.body)}`);
 	next();
 };
 
-const checkAuthToken = (req, res, next) => {
+const checkAuthToken = (req, _res, next) => {
 	try {
 		const authorization = req.get('authorization');
 		const [bearer, token] = authorization.split(' ');
@@ -19,12 +19,18 @@ const checkAuthToken = (req, res, next) => {
 	}
 };
 
-const errorHandler = (err, req, res) => {
-	if (err.name === 'JsonWebTokenError') return res.status(401).json({ error: 'Invalid JWT'});
-	
-	// Add errors here while we find them
+const errorHandler = (err, req, res, _next) => {
+	if (err.name === 'JsonWebTokenError') return res.status(401).json({ errors: ['Invalid JWT'] });
+	if (err.name === 'ValidationError') {
+		const errors = Object.entries(err.errors).map(([_key, value]) => {
+			if (value.kind.match('^(unique|required)$')) return value.message; // Unique Validator
+			return value.reason; // Custom Error
+		});
+		return res.status(400).json({errors});
+	}
+	// Add errors here as we find them
 	logger.error(`${req.method} ${req.path} - ${JSON.stringify(req.body)}`, err);
-	res.status(500).json({ error: err.message, errorname: err.name });
+	return res.status(400).json({ message: err.message, name: err.name,  err});
 };
 
 module.exports = {
