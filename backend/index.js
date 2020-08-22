@@ -1,14 +1,14 @@
-const path = require('path')
+const path = require('path');
 const config = require('./config');
-const logger = require('./util/logger');
+
 const express = require('express');
 const app = express();
-require('express-async-errors');
-const { requestLogger, errorHandler } = require('./util/middleware');
-
 const cors = require('cors');
+const logger = require('./util/logger');
+const { requestLogger, errorHandler } = require('./util/middleware');
+require('express-async-errors');
 
-require('./config/database');
+require('./loaders/database');
 
 process.on('unhandledRejection', e => {
 	logger.error(e);
@@ -25,12 +25,14 @@ app.use(express.static('build'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/users', require('./routes/api/users'));
 
+app.use(errorHandler);
+
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.use((_req, res) => res.sendStatus(404));
-app.use(errorHandler);
+
 
 app.listen(config.PORT, () => {
 	logger.info(`Server started on http://localhost:${config.PORT}`);

@@ -9,7 +9,7 @@ const config = {
 	PORT: process.env.PORT || 3001,
 	DB_URI: process.env.DB_URI,
 	JWT_SECRET: process.env.JWT_SECRET,
-	LOGGER_LEVEL: process.env.LOGGER_LEVEL || 'info'
+	LOGGER_LEVEL: process.env.LOGGER_LEVEL || 'info',
 };
 
 logger.silly({ config });
