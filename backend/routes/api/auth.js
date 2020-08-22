@@ -8,9 +8,10 @@ const bcrypt = require('bcrypt');
 
 router.post('/signup', async (req, res) => {
 	const { username, email, password } = req.body;
-	await User.create({username, email, password});
+	const user = await User.create({username, email, password});
 	// Code for sending E-Mail here
-	res.sendStatus(201);
+	const token = createJwt({ id: user.id });
+	res.status(201).json({ token });
 });
 
 router.post('/login', async (req, res) => {
@@ -22,10 +23,10 @@ router.post('/login', async (req, res) => {
 	if(!user) return res.status(400).send('invalid username or password');
 	const isValid = await bcrypt.compare(password, user.password);
 	if (!isValid) return res.status(400).send('invalid username or password');
-	const token = createJwt(user);
+	const token = createJwt({ id: user.id });
 	res.json({ token });
 });
 
-const createJwt = user => jwt.sign({ user: { _id: user._id } }, config.JWT_SECRET, { expiresIn: '24h' });
+const createJwt = payload => jwt.sign(payload, config.JWT_SECRET, { expiresIn: '24h' });
 
 module.exports = router;
