@@ -3,17 +3,19 @@ const mongoose = require('mongoose');
 const uniqueValidatorPlugin = require('mongoose-unique-validator');
 
 const setEmail = email => {
+	if (!email) throw 'Missing Email Field';
 	if (!email.match(/.+@.+/)) throw 'Invalid Email';
 	return email;
 };
 
 const setUsername = username => {
+	if (!username) throw 'Missing Username Field';
 	if (!username.match(/^\S{3,}$/)) throw 'Invalid Username';
 	return username;
 };
 
-
 const setPassword = password => {
+	if (!password) throw 'Missing Password Field';
 	// Check if the password is any non-whitespace character over 3 letters
 	if (!password.match(/^\S{3,}$/)) throw 'Invalid Password';
 	return bcrypt.hashSync(password, 10, (err, hashedPassword) => {
@@ -26,19 +28,19 @@ const userSchema = new mongoose.Schema({
 	email: {
 		type: String,
 		set: setEmail,
-		unique: ['Email is already taken!'],
-		required: ['Missing Email Field'],
+		unique: ['Email is already registered!'],
+		required: true,
 	},
 	username: {
 		type: String,
 		set: setUsername,
-		unique: ['Username is already taken!'],
-		required: ['Missing Username Field!'],
+		unique: ['Username is already registered!'],
+		required: true,
 	},
 	password: {
 		type: String,
 		set: setPassword,
-		required: ['Missing Password Field!'],
+		required: true,
 	},
 	verified: {
 		type: Boolean,
