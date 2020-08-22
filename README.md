@@ -5,6 +5,7 @@
 - [Contents](#contents)
 - [Contributing](#contributing)
 - [Trello](#trello)
+- [Documentation](#documentation)
 - [Prerequisites](#prerequisites)
 - [Frontend](#frontend)
 	- [Commands](#commands)
@@ -32,6 +33,9 @@
 
 # Trello
 [Trello Link](https://trello.com/b/3iFDHmdb/booker)
+
+# Documentation
+- [API Docss](./docs/API.md)
 
 # Prerequisites
 Make sure you have Node.js installed
