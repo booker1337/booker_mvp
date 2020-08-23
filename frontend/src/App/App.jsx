@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import authService from '../utils/authService';
 import Home from "./containers/Home";
+import NavBar from "./containers/NavBar";
+import "./App.css";
 
 const PrivateRoute = ({ cb, ...rest }) => (
   <Route {...rest}
@@ -28,10 +30,10 @@ function App() {
 
   return (
     <div className="App">
-      
       <Router>
         <Switch>
         <Route exact path="/">
+            <NavBar />
             <Home />
         </Route>
           <Route path="/login" render={props => <div>Login Page</div>} />
