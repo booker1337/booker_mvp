@@ -5,6 +5,7 @@ import authService from '../utils/authService';
 import SignupPage from './SignupPage/SignupPage';
 import LoginPage from './LoginPage/LoginPage';
 import ProfilePage from './ProfilePage/ProfilePage';
+import NotFoundPage from './NotFoundPage/NotFoundPage';
 
 const PrivateRoute = ({ privateRender, ...routeProps }) => (
   <Route
@@ -29,6 +30,7 @@ function App() {
           <Route path="/signup" render={(props) => <SignupPage signup={authService.signup(setUser, props.history)}/>} />
           <Route path="/onboarding" render={props => <div>Onboarding Page</div>} />
           <PrivateRoute path="/profile" privateRender={props => <ProfilePage user={user} />} />
+          <Route render={props => <NotFoundPage />} />
           {/* <PrivateRoute
             exact
             path="/swipe"
