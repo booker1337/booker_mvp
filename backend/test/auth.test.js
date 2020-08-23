@@ -10,7 +10,7 @@ const api = supertest(app);
 beforeAll(async () => {
 	await loadDatabase(config.DB_TEST_URI);
 	await User.deleteMany({});
-}, 60 * 1000); // Allow 60 seconds for database to connect, Atlas takes ages to connect
+}, 120 * 1000); // Allow 120 seconds for database to connect, Atlas takes a while
 
 describe('User Signup', () => {
 	afterEach(async () => {
