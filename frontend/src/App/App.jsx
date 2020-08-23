@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import authService from '../utils/authService';
 
-import AuthPage from './AuthPage/AuthPage';
+import SignupPage from './SignupPage/SignupPage';
+import LoginPage from './LoginPage/LoginPage';
 
 const PrivateRoute = ({ cb, ...rest }) => (
   <Route {...rest}
@@ -17,24 +18,26 @@ const PrivateRoute = ({ cb, ...rest }) => (
 function App() {
   const [user, setUser] = useState(authService.getUser() || undefined);
 
-  const handleLogin = () => {
-    let user = authService.getUser() || undefined;
-    this.setUser(user);
-  };
-
-  const handleLogout = () => {
-    authService.logout()
-    this.setUser(user);
-  };
+  const login = (payload) => (
+    fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(res => res.json())
+      .then(body => {
+        console.log(body);
+      })
+      .catch(err => console.log(err))
+  );
 
   return (
     <div className="App">
-      
       <Router>
         <Switch>
           <Route exact path="/" render={props => <div>Landing Page</div>} />
-          <Route path="/login" render={props => <AuthPage />} />
-          <Route path="/signup" render={props => <AuthPage />} />
+          <Route path="/login" render={(props) => <LoginPage login={login(setUser, props.history)}/>} />
+          <Route path="/signup" render={(props) => <SignupPage signup={authService.signup(setUser, props.history)}/>} />
           <Route path="/onboarding" render={props => <div>Onboarding Page</div>} />
           <PrivateRoute
             exact
