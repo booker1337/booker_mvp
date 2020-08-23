@@ -4,11 +4,13 @@ import authService from '../utils/authService';
 
 import SignupPage from './SignupPage/SignupPage';
 import LoginPage from './LoginPage/LoginPage';
+import ProfilePage from './ProfilePage/ProfilePage';
 
-const PrivateRoute = ({ cb, ...rest }) => (
-  <Route {...rest}
-    render={props => {
-      let component = cb(props);
+const PrivateRoute = ({ privateRender, ...routeProps }) => (
+  <Route
+    {...routeProps}
+    render={routerProps => {
+      let component = privateRender(routerProps);
       if(!!component.props.user) return component;
       else return <Redirect to="/signup" />;
     }}
@@ -18,48 +20,28 @@ const PrivateRoute = ({ cb, ...rest }) => (
 function App() {
   const [user, setUser] = useState(authService.getUser() || undefined);
 
-  const login = (payload) => (
-    fetch('/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-      .then(res => res.json())
-      .then(body => {
-        console.log(body);
-      })
-      .catch(err => console.log(err))
-  );
-
   return (
     <div className="App">
       <Router>
         <Switch>
           <Route exact path="/" render={props => <div>Landing Page</div>} />
-          <Route path="/login" render={(props) => <LoginPage login={login(setUser, props.history)}/>} />
+          <Route path="/login" render={(props) => <LoginPage login={authService.login(setUser, props.history)}/>} />
           <Route path="/signup" render={(props) => <SignupPage signup={authService.signup(setUser, props.history)}/>} />
           <Route path="/onboarding" render={props => <div>Onboarding Page</div>} />
-          <PrivateRoute
+          <PrivateRoute path="/profile" privateRender={props => <ProfilePage user={user} />} />
+          {/* <PrivateRoute
             exact
             path="/swipe"
-            user={user}
-            cb={props => <div>Swipe Page</div>}
-          />
-          <PrivateRoute
-            path="/profile/:username"
-            user={user}
-            render={props => <div>Profile Page: {props.match.params.username}</div>}
-          />
-          <PrivateRoute
+            privateRender={() => <div>Swipe Page</div>}
+          /> */}
+          {/* <PrivateRoute
             path="/matches"
-            user={user}
-            render={props => <div>Matches Page</div>}
-          />
-          <PrivateRoute
+            privateRender={() => <div>Matches Page</div>}
+          /> */}
+          {/* <PrivateRoute
             path="/group/:groupName"
-            user={user}
-            render={props => <div>Matches Page: {props.match.params.groupName}</div>}
-          />
+            privateRender={props => <div>Matches Page: {props.match.params.groupName}</div>}
+          /> */}
         </Switch>
       </Router>
 

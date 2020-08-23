@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import Auth from '../Auth/Auth';
 
-const LoginPage = () => {
+const LoginPage = React.memo(({ login }) => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
 
-  const handleChange = (e) => setFormData({ [e.target.name]: e.target.value });
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    login(formData);
   };
 
   return (
@@ -37,6 +37,6 @@ const LoginPage = () => {
       </Auth.Form>
     </Auth.Template>
   );
-};
+});
 
 export default LoginPage;

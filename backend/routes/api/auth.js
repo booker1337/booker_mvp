@@ -20,11 +20,11 @@ router.post('/login', async (req, res) => {
 	if (email) user = await User.findOne({ email });
 	if (username) user = await User.findOne({ username });
 	// TODO: prevent early return if user is undefined
-	if(!user) return res.status(400).send('invalid username or password');
+	if(!user) return res.status(400).json({ errors: ['Invalid Username or Password'] });
 	const isValid = await bcrypt.compare(password, user.password);
-	if (!isValid) return res.status(400).send('invalid username or password');
-	const token = createJwt({ id: user.id });
-	res.json({ token });
+	if (!isValid) return res.status(400).json({ errors: ['Invalid Username or Password'] });
+	const token = createJwt({ id: user._id });
+	res.json({ token, username: user.username, id: user._id });
 });
 
 const createJwt = payload => jwt.sign(payload, config.JWT_SECRET, { expiresIn: '24h' });

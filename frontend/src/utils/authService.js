@@ -5,13 +5,10 @@ const authUtil = async (res, setUser, history, username) => {
 		const { token } = await res.json();
 		tokenService.setToken(token);
 
-		const payload = JSON.parse(atob(token.split('.')[1]))
-		setUser({
-			id: payload.id,
-			username: payload.username,
-		});
+		const id = tokenService.getUserFromToken();
+		setUser(id);
 
-		history.push(`/profile/${username}`);
+		history.push(`/profile`);
 	}
 	else {
 		const { errors } = await res.json();

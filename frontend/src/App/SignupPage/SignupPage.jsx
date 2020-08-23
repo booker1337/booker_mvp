@@ -11,7 +11,6 @@ const SignupPage = ({ signup }) => {
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
-    console.log(formData)
     e.preventDefault();
     signup(formData);
   };
