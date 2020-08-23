@@ -27,6 +27,7 @@
 		- [Creating a heroku app.](#creating-a-heroku-app)
 		- [Real-time logs](#real-time-logs)
 		- [Heroku Environment Variables](#heroku-environment-variables)
+	- [Setting up Github Actions](#setting-up-github-actions)
 
 # Contributing
 [Read the CONTRIBUTING.md](./CONTRIBUTING.md)
@@ -177,3 +178,14 @@ Keep in mind that any `&` inside the command will cause it to break.
 For `&w=majority` in the `DATABASE_URI` the workaround is to set it by default upon connecting via mongoose
 
 [Back to top](#contents)
+
+## Setting up Github Actions
+ To make Github Actions work on your fork (Highly recommended if you're changing anything big on the backend), you need to add the .env variables to the Secrets part in your repo
+
+- Go to your fork's repo's settings
+- Secrets
+- Add `DB_TEST_URI`, which is your MongoDB URI, configured to use a testing database, if you need one send me or anyers a message and we'll give you it
+- Add `JWT_SECRET`, run the backend without a JWT_SECRET and it'll generate 64 random bytes for you, which you can copy, but tbh you could get away with putting any string
+
+Remember to put the secrets as plain strings without any quotation marks, else it'd break the tests. 
+If you have any questions, feel free to ask Ryan.
