@@ -5,6 +5,7 @@ const express = require('express');
 const { requestLogger, errorHandler } = require('./util/middleware');
 const appRoutes = require('./routes/api/auth');
 const usersRotes = require('./routes/api/users');
+const validRoutes = require('./routes/api/valid');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.static('build')); // React build
 
 app.use('/api/auth', appRoutes);
 app.use('/api/users', usersRotes);
+app.use('/api/valid', validRoutes);
 
 app.use(errorHandler); // Handles all uncaught exceptions in routes
 
