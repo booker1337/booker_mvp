@@ -11,7 +11,7 @@ const setEmail = email => {
 const setUsername = username => {
 	if (!username) throw 'Missing Username Field';
 	if (!username.match(/^\S{3,}$/)) throw 'Invalid Username';
-	return username;
+	return username[0].toUpperCase() + username.slice(1).toLowerCase();
 };
 
 const setPassword = password => {
