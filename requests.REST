@@ -2,7 +2,8 @@ POST http://localhost:3001/api/auth/signup
 Content-Type: application/json
 
 {
-	"username": "ryantestingtesr123",
+	"username": "tesqw",
+	"email": "rynemahtfil@email.com",
 	"password": "test"
 }
 
@@ -27,3 +28,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6I
 
 # 404 Route, should lead to error
 GET http://localhost:3001/404
+
+###
+
+GET http://localhost:3001/api/valid/isUsernamePresent/ryap
+
+###
+
+GET http://localhost:3001/api/valid/isEmailPresent/rynemail@email.com
