@@ -12,7 +12,6 @@ module.exports = {
 		console.log(chalk.bgGreen.black(...params));
 	},
 	error: (...params) => {
-		if (process.env.NODE_ENV !== 'test' && !process.env.LOGGER_LEVEL.match(/^(|silly|info|error)$/i)) return;
 		console.error(chalk.bgRed.black(...params));
 	},
 };
