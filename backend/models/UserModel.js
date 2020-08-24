@@ -5,7 +5,7 @@ const uniqueValidatorPlugin = require('mongoose-unique-validator');
 const setEmail = email => {
 	if (!email) throw 'Missing Email Field';
 	if (!email.match(/.+@.+/)) throw 'Invalid Email';
-	return email;
+	return email.toLowerCase();
 };
 
 const setUsername = username => {
