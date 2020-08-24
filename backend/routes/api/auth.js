@@ -1,8 +1,12 @@
-const config = require('./../../config');
-const router = require('express').Router();
-const User = require('../../models/UserModel');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const express = require('express');
+const jwt = require('jsonwebtoken');
+
+const config = require('./../../config');
+const User = require('../../models/UserModel');
+const { checkAuthToken } = require('./../../util/middleware');
+
+const router = express.Router();
 
 // Route: /api/auth
 
