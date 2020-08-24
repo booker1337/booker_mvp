@@ -1,17 +1,13 @@
 const router = require('express').Router();
-const User = require('../../models/user');
-const { checkAuthToken } = require('./../../util/middleware')
+const User = require('../../models/UserModel');
+const { checkAuthToken } = require('./../../util/middleware');
 
-router.use(checkAuthToken);
+// Route: /api/users
 
-router.get('/' , async (req, res) => {
-	try {
-		console.log(req.token)
-		let user = await User.findById(req.token.user._id);
-		res.json({ user });
-	} catch(err) {
-		res.status(401).send('1 unauthorized');
-	}
+router.get('/' , checkAuthToken, async (req, res) => {
+	let user = await User.findById(req.token.user._id);
+	if (!user) return res.sendStatus(400);
+	res.json({ user });
 });
 
 module.exports = router;

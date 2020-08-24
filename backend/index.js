@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const path = require('path')
 const config = require('./config');
 const logger = require('./util/logger');
@@ -17,28 +18,25 @@ const cors = require('cors');
 
 require('./config/database');
 
+=======
+>>>>>>> 742e9d95734bf5ced943ab46ce94348b0e00ade3
 process.on('unhandledRejection', e => {
 	logger.error(e);
 	process.exit(1);
 });
 
-app.use(cors());
-app.use(express.json());
+const http = require('http');
+const config = require('./config');
+const logger = require('./util/logger');
+const app = require('./app');
+const { loadDatabase } = require('./loaders/database');
 
-app.use(requestLogger);
+const main = async () => {
+	const server = http.createServer(app);
+	
+	await loadDatabase(`${config.DB_URI}&w=majority`);
 
-app.use(express.static('build'));
+	server.listen(config.PORT, () => logger.info(`Server running on ${config.PORT}`));
+};
 
-app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/users', require('./routes/api/users'));
-
-app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-app.use((_req, res) => res.sendStatus(404));
-app.use(errorHandler);
-
-app.listen(config.PORT, () => {
-	logger.info(`Server started on http://localhost:${config.PORT}`);
-});
+main();
