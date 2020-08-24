@@ -29,12 +29,13 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
 	const { loginId, password } = req.body;
-
+	
+	const loginRegex = new RegExp(`^${req.params.email}$`, 'i');
 	const loginType = loginId.match(/@/) ? 'Email' : 'Username'; 
 	let user;
 
-	if (loginType === 'Email') user = await User.findOne({ email: loginId });
-	else user = await User.findOne({ username: loginId });
+	if (loginType === 'Email') user = await User.findOne({ email: loginRegex });
+	else user = await User.findOne({ username: loginRegex });
 
 	if (!user) return res.status(400).send({ errors: [{ loginId: `Invalid ${loginType}` } ]});
 
