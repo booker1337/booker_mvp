@@ -46,6 +46,5 @@ router.post('/login', async (req, res) => {
 });
 });
 
-const createJwt = payload => jwt.sign(payload, config.JWT_SECRET, { expiresIn: '24h' });
 
 module.exports = router;
