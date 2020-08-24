@@ -18,16 +18,22 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-	const { username, email, password } = req.body;
+	const { loginId, password } = req.body;
+
+	const loginType = loginId.match(/@/) ? 'Email' : 'Username'; 
 	let user;
-	if (email) user = await User.findOne({ email });
-	if (username) user = await User.findOne({ username });
-	// TODO: prevent early return if user is undefined
-	if(!user) return res.status(400).send('invalid username or password');
+
+	if (loginType === 'Email') user = await User.findOne({ email: loginId });
+	else user = await User.findOne({ username: loginId });
+
+	if (!user) return res.status(400).send({ errors: [{ loginId: `Invalid ${loginType}` } ]});
+
 	const isValid = await bcrypt.compare(password, user.password);
-	if (!isValid) return res.status(400).send('invalid username or password');
+	if (!isValid) return res.status(400).send({ errors: [{ password: 'Invalid Password' }] });
+
 	const token = createJwt({ id: user.id });
-	res.json({ token });
+	res.json({ token, id: user.id, username: user.username });
+});
 });
 
 const createJwt = payload => jwt.sign(payload, config.JWT_SECRET, { expiresIn: '24h' });
