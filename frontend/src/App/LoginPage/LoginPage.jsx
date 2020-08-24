@@ -16,7 +16,7 @@ const LoginPage = React.memo(({ login }) => {
 
   return (
     <Auth.Template linkTo={'/signup'} linkText="Join Booker">
-      <Auth.Form title="Booker Member? Log In" actionText="get started" handleSubmit={handleSubmit}>
+      <Auth.Form title="Booker Member? Log In" actionText="LOG IN" handleSubmit={handleSubmit}>
         <Auth.FormInput
           name="username"
           label="Username"

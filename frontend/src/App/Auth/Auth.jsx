@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Auth.css'
 
 const AuthFormInput = ({ name, label, value, type, autoComplete, handleChange }) => (
   <div className='row my-2'>
     <div className='col-10 col-sm-8 mx-auto'>
       <label className='d-block'>{label}</label>
       <input
-        className='form-control'
+        className='form-control form-rounded'
         autoComplete={autoComplete}
         type={type}
         name={name}
@@ -23,7 +24,7 @@ const AuthForm = ({ children, title, actionText, handleSubmit }) => (
     {children}
     <div className='d-flex mt-5'>
       <input
-        className='mx-auto btn btn-primary text-uppercase'
+        className='mx-auto btn btn-primary text-uppercase form-rounded px-5'
         type='submit'
         value={actionText}
       />
