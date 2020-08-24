@@ -24,6 +24,7 @@ router.post('/signup', async (req, res) => {
 			});
 			return res.status(400).json({errors});
 		}
+	}
 });
 
 router.post('/login', async (req, res) => {
