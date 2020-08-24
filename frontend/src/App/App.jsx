@@ -28,17 +28,9 @@ function App() {
     <div className="App">
       <Router>
         <Switch>
-<<<<<<< HEAD
-        <Route exact path="/">
-            <NavBar />
-            <Home />
-        </Route>
-          <Route path="/login" render={props => <div>Login Page</div>} />
-=======
           <Route exact path="/" render={props => <div>Landing Page</div>} />
           <Route path="/login" render={(props) => <LoginPage login={authService.login(setUser, props.history)}/>} />
           <Route path="/signup" render={(props) => <SignupPage signup={authService.signup(setUser, props.history)}/>} />
->>>>>>> origin/ayershov777
           <Route path="/onboarding" render={props => <div>Onboarding Page</div>} />
           <PrivateRoute path="/profile" privateRender={props => <ProfilePage user={user} />} />
           <Route render={props => <NotFoundPage />} />
