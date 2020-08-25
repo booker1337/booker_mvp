@@ -8,7 +8,7 @@ const User = require('../models/UserModel');
 const api = supertest(app);
 
 beforeAll(async () => {
-	await loadDatabase(config.DB_TEST_URI);
+	await loadDatabase(config.DB_URI);
 	await User.deleteMany({});
 }, 120 * 1000); // Allow 120 seconds for database to connect, Atlas takes a while
 
