@@ -3,8 +3,8 @@ const logger = require('../util/logger');
 
 const loadDatabase = async (DB_URI) => {
 	let dbName;
-	if (!process.env.NODE_ENV) throw Error('Missing NODE_ENV environment');
-	if (process.env.NODE_ENV.match(/prod/i)) dbName = 'booker-prod';
+	if (!process.env.NODE_ENV) dbName = 'booker-unknown-env';
+	else if (process.env.NODE_ENV.match(/prod/i)) dbName = 'booker-prod';
 	else if (process.env.NODE_ENV.match(/dev/i)) dbName = 'booker-dev';
 	else if (process.env.NODE_ENV.match(/test/i)) dbName = 'booker-test';
 
