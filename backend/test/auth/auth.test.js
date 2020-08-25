@@ -1,10 +1,10 @@
-const config = require('./../config');
-const { loadDatabase } = require('../loaders/database');
+const config = require('../../config');
+const { loadDatabase } = require('../../loaders/database');
 const mongoose = require('mongoose');
-const app = require('../app');
+const app = require('../../app');
 const supertest = require('supertest');
 const jwt = require('jsonwebtoken');
-const User = require('../models/UserModel');
+const User = require('../../models/UserModel');
 const api = supertest(app);
 
 beforeAll(async () => {
