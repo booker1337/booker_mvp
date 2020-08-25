@@ -11,10 +11,20 @@ const router = express.Router();
 
 router.post('/signup', async (req, res) => {
 	const { username, email, password } = req.body;
-	const user = await User.create({username, email, password});
-	// Code for sending E-Mail here
-	const token = createJwt({ id: user.id });
-	res.status(201).json({ token });
+	try {
+		const user = await User.create({username, email, password});
+		// Code for sending E-Mail here
+		const token = createJwt({ id: user.id });
+		res.status(201).json({ token, username: user.username, id: user.id });
+	} catch (e) {
+		if (e.name === 'ValidationError') {
+			const errors = Object.entries(e.errors).map(([_key, value]) => {
+				if (value.kind.match('^(unique|required)$')) return { [value.path || 'error']: value.message }; // Unique Validator
+				return { [value.path || 'error']: value.reason }; // Custom Error
+			});
+			return res.status(400).json({errors});
+		}
+	}
 });
 
 router.post('/login', async (req, res) => {
