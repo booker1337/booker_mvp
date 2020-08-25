@@ -5,13 +5,13 @@ const uniqueValidatorPlugin = require('mongoose-unique-validator');
 const setEmail = email => {
 	if (!email) throw 'Missing Email Field';
 	if (!email.match(/.+@.+/)) throw 'Invalid Email';
-	return email;
+	return email.toLowerCase();
 };
 
 const setUsername = username => {
 	if (!username) throw 'Missing Username Field';
 	if (!username.match(/^\S{3,}$/)) throw 'Invalid Username';
-	return username;
+	return username[0].toUpperCase() + username.slice(1).toLowerCase();
 };
 
 const setPassword = password => {
