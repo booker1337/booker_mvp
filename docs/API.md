@@ -1,23 +1,61 @@
 # Booker MVP API Summary
 
+## Note:
+These routes are relative to `/api`, so if you're looking at `/auth/signup`, the real route is `/api/auth/signup`
+
 ## Table of Contents
-- [POST /auth/signup](#post-authsignup)
-- [POST /auth/login](#post-authlogin)
-- [POST /books/search](#post-bookssearch)
+- [/Auth](#auth)
+  - [GET /auth](#get-auth)
+  - [POST /auth/signup](#post-authsignup)
+  - [POST /auth/login](#post-authlogin)
+- [/User](#user)
+  - [GET /user/:id](#get-userid)
+- [/Valid](#verification)
+  - [GET /valid/isUsernamePresent/:username](#get-isusernamepresent)
+  - [GET /valid/isEmailPresent/:email](#get-isemailpresent)
+- [/Books](#books)
+  - [POST /books/search](#post-bookssearch)
 - [POST /onboard](#post-onboard)
 - [POST /copy_this](#post-copy_this)
+
+# /Auth
+
+## GET /auth
+
+~ Work in Progress ~
+Will be used to just test JWT Authorization of routes
+
+### Headers
+```
+ Authentication: Bearer <Token>
+```
+### -- valid response payload --
+Response: `200`
+```
+  < User Object >
+```
+### Summary:
+- For testing JWT Authentication, and getting the appropriate user data of the id inside the token
+- 
+### Error handling
+- WIP
+
+[Back to Contents](#table-of-contents)
+
 
 ## POST /auth/signup
 ### Payload
 ```
-  username: String
   email: String
+  username: String
   password: String
 ```
 ### -- valid response payload --
-Response: 200
+Response: `200`
 ```
+  id: String
   token: String
+  username: String
 ```
 ### -- token payload --
 ```
@@ -25,22 +63,24 @@ Response: 200
 ```
 ### Summary:
 - Encrypt the password
+- Makes username lowercase with first letter capitalized
+- Ensures unique email/username
 - Create a new document in the `users` collection
 - Generate a JWT and return it to the client
 ### Error handling
-Response: 400
+Response: `400`
 
 with a Returns a list of errors (only the errors that occur is in the list)
 ```
   errors : [
-	  'Invalid Username',
-	  'Invalid Email',
-	  'Invalid Password',
-	  'Missing Username Field',
-	  'Missing Email Field',
-	  'Missing Password Field',
-	  'Email is already Registered',
-	  'Password is already Registered'
+	  { 'username', 'Invalid Username' },
+	  { 'email',    'Invalid Email' },
+	  { 'password', 'Invalid Password' },
+	  { 'username', 'Missing Username Field' },
+	  { 'email',    'Missing Email Field' },
+	  { 'password', 'Missing Password Field' },
+	  { 'email',    'Email is already Registered' },
+	  { 'username', 'Username is already Registered' }
   ]
 ```
 
@@ -49,6 +89,9 @@ with a Returns a list of errors (only the errors that occur is in the list)
 ---
 
 ## POST /auth/login
+
+**Warning** - This route hasn't been tested fully yet! Look out for bugs, and if you find any, look at the source code.
+
 ### -- request payload --
 ```
   loginId: String
@@ -63,14 +106,83 @@ with a Returns a list of errors (only the errors that occur is in the list)
   username: String
 ```
 ### Summary
-- Compare the passwords
-- Generate a JWT and return it to the client
+- Authenticate user via finding username/email then comparing the password
+- Generate a JWT and return it to the client for authorization
+
 ### Error handling
-- *needs documentation*
+
 
 [Back to Contents](#table-of-contents)
 
----
+# /User
+
+## GET /user/:id
+
+WIP
+
+### -- request headers --
+```
+  Authentication: Bearer <Token>
+```
+
+### -- request params --
+```
+  /user/<INSERT ID HERE>
+```
+### -- response payload --
+Response Status: `200`
+```
+  username: String
+  email: String
+  verified: Boolean
+```
+### Summary
+- Retrieves user object from database which has the ID of `/:id`
+### Error Handling
+Response Status: `400`
+```
+  errors: [{ 'error': 'User not Found' }]
+```
+
+[Back to Contents](#table-of-contents)
+
+# /Valid
+
+## GET /isUsernamePresent
+### -- request payload --
+```
+  username: String
+```
+### -- response payload --
+Response Status: 200
+```
+  present: Boolean
+```
+### Summary
+- Checks if the username is present
+### Error Handling
+No errors
+
+[Back to Contents](#table-of-contents)
+
+## GET /isEmailPresent
+### -- request payload --
+```
+  email: String
+```
+### -- response payload --
+Response Status: 200
+```
+  present: Boolean
+```
+### Summary
+- Checks if the email is present
+### Error Handling
+No errors
+
+[Back to Contents](#table-of-contents)
+
+# /Books
 
 ## POST /books/search
 ### -- request payload --
