@@ -9,7 +9,7 @@ module.exports = {
 	info: (...params) => {
 		if (process.env.NODE_ENV === 'test') return;
 		if (!process.env.LOGGER_LEVEL.match(/^(|info|silly)$/i)) return;
-		console.log(...params);
+		console.log(chalk.bgGreen.black(...params));
 	},
 	error: (...params) => {
 		console.error(chalk.bgRed.black(...params));
