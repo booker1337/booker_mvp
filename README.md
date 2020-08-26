@@ -1,12 +1,14 @@
 # 📕 Booker 
 
+Built with the MERN Stack.
+
 # Contents
 - [📕 Booker](#-booker)
 - [Contents](#contents)
 - [Contributing](#contributing)
 - [Trello](#trello)
-- [Documentation](#documentation)
-- [Prerequisites](#prerequisites)
+- [API Documentation](#api-documentation)
+- [Getting Started](#getting-started)
 - [Frontend](#frontend)
 	- [Commands](#commands)
 		- [Starting the Server](#starting-the-server)
@@ -35,17 +37,27 @@
 # Trello
 [Trello Link](https://trello.com/b/3iFDHmdb/booker)
 
-# Documentation
-- [API Docss](./docs/API.md)
+# API Documentation
+- [API Docs](./docs/API.md)
 
-# Prerequisites
-Make sure you have Node.js installed
+# Getting Started
+- Make sure you have a recent version of Node.js installed, preferably `12.x` .
 
-Make sure to change your `npm` shell to git's bash before running these commands
+- Make sure to change your `npm` shell to git's bash before running files commands.
 
 ```
 npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
 ```
+
+- [Host your own MongoDB Instance locally](https://zellwk.com/blog/local-mongodb/), or contact the maintainers for a URI to the MongoDB Atlas Database.
+
+- Setup your `.env` file correctly. [Details](#setting-up-environment-variables)
+
+- Install both frontend and backend packages via `npm install` in the proper directory.
+
+- If you want an overview on what routes are available on the backend, look at the [API Docs](./docs/API.md)
+
+- If you have any issues, contact the maintainers.
 
 # Frontend
 
@@ -116,6 +128,7 @@ and fill out the .env variables
 DB_URI="<insert your URI here>"
 DB_TEST_URI="<insert your testing URI here>"
 JWT_SECRET="<Insert random 64 bytes>"
+LOGGER_LEVEL="info"
 ```
 For example:
 ```
@@ -128,20 +141,25 @@ LOGGER_LEVEL="info"
 For the `DB_URI` and `DB_TEST_URI`, make sure they are seperate databases, signified by the end of the connection string `/dev` or `/test`.
 
 #### JWT_SECRET
-Make sure to generate 64 random bytes for the `JWT_SECRET`, or just run the server you can copy and paste the suggested `JWT_SECRET` into here.
+Make sure to generate 64 random bytes for the `JWT_SECRET`.
+
+Alternatively, you can run the server to generate one, and can copy and paste it into the .env file.
+Otherwise, 
+- Open a node shell via running `node` in the commandline
+- Import the `crypto` library `const crypto = require('crypto')`
+- Generate 64 random bytes in hexadecimal format `crypto.randomBytes(64).toString('hex')`
+- Copy the generated string into your .env file.
 
 #### LOGGER_LEVEL
 All these options are case insensitive.
 
-By default, the logger will always display `info` and `error` logs.
+If left empty, all logs will show up.
 
 Setting this option to `silly` will show all logs, like requests and initial config
 
 Setting it to `info` will make it only display vital information, like the initialization of the server, connection to the database
 
-setting it to `error` will only display errors. This is reccomended to be set inside a testing environment.
-
-⚠ Any other Non-empty strings will cause no logs to be displayed ⚠
+Setting it to `error`, or any other string, will cause only errors to display.
 
 
 ## Initializing your Heroku app
@@ -166,6 +184,8 @@ heroku logs -t
 ```
 
 ### Heroku Environment Variables
+By default, the `NODE_ENV=production` variable is set. This will allow Heroku to use the production database.
+
 To set Environment variables in heroku,
 ```
 heroku config:set <KEY>=<Value>
@@ -184,8 +204,8 @@ For `&w=majority` in the `DATABASE_URI` the workaround is to set it by default u
 
 - Go to your fork's repo's settings
 - Secrets
-- Add `DB_TEST_URI`, which is your MongoDB URI, configured to use a testing database, if you need one send me or anyers a message and we'll give you it
-- Add `JWT_SECRET`, run the backend without a JWT_SECRET and it'll generate 64 random bytes for you, which you can copy, but tbh you could get away with putting any string
+- Add `DB_URI`, which is your MongoDB URI. If you don't have one, contact the maintainers.
+- Add a `JWT_SECRET`. [Look here on how to generate a good JWT_SECRET](#jwt_secret)
 
 Remember to put the secrets as plain strings without any quotation marks, else it'd break the tests. 
 If you have any questions, feel free to ask Ryan.
