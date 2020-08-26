@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import authService from '../utils/authService';
-import Home from "./containers/Home";
-import NavBar from "./containers/NavBar";
 import "./App.css";
+
+import NavBar from './NavBar/NavBar';
+import Hamburger from './Hamburger/Hamburger';
+import Backdrop from './Backdrop/Backdrop';
 
 import SignupPage from './SignupPage/SignupPage';
 import LoginPage from './LoginPage/LoginPage';
@@ -21,11 +23,34 @@ const PrivateRoute = ({ privateRender, ...routeProps }) => (
   />
 );
 
+state = {
+  HamburgerOpen: false
+};
+
+const HamburgerToggleClickHandler = () => {
+  this.setState((prevState) => {
+    return {HamburgerOpen: !prevState.HamburgerOpen};
+  });
+};
+
+const BackdropClickhandler = () => {
+  this.setState({HamburgerOpen: false});
+};
+
 function App() {
   const [user, setUser] = useState(authService.getUser() || undefined);
 
+  let Backdrop;
+
+  if (this.state.HamburgerOPen) {
+    Backdrop = <Backdrop click={this.BackdropClickHandler} />;
+  }
+
   return (
-    <div className="App">
+    <div className="App" style={{height: '100%'}}>
+      <NavBar HamburgerClickHandler={this.HamburgerToggleClickHandler} />
+      {Hamburger}
+      {Backdrop}
       <Router>
         <Switch>
           <Route exact path="/" render={props => <div>Landing Page</div>} />

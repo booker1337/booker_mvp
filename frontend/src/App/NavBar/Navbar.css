@@ -1,0 +1,47 @@
+.NavBar{
+    position:fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: orange;
+    height: 64px;
+}
+.NavBar_Navigation{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 1rem;
+}
+.NavBar_logo{
+    margin-left: 0.5rem;
+}
+.NavBar_logo a{
+    color: #000;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+.NavBar_Navigation-Items ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+.NavBar_Navigation-Items li{
+    padding: 0 0.5rem;
+}
+.NavBar_Navigation-Items a{
+    text-decoration: none;
+    color: #000;
+}
+.NavBar_Navigation-Items a:hover,
+.NavBar_Navigation-Items a:active{
+    color: orange;
+}
+.SignIn{
+    border: 1px solid #000;
+    padding: 1rem 1.3rem;
+    border-radius: 2rem;
+}
+.spacer{
+    flex: 1;
+}
