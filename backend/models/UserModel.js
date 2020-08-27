@@ -53,8 +53,11 @@ const userSchema = new mongoose.Schema({
 userSchema.plugin(uniqueValidatorPlugin);
 
 userSchema.methods.toJSON = function () {
-	var obj = this.toObject();
+	const obj = this.toObject();
+	obj.id = obj._id.toJSON();
 	delete obj.password;
+	delete obj._id;
+	delete obj.__v;
 	return obj;
 };
 
