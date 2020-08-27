@@ -88,6 +88,13 @@ Response: `200`
   id: String
 ```
 
+### Summary:
+- Encrypt the password
+- Makes username lowercase with first letter capitalized
+- Ensures unique email/username
+- Create a new document in the `users` collection
+- Generate a JWT and return it to the client
+
 ### Error handling
 Response: `400`
 
@@ -142,7 +149,12 @@ Response: `401`
 ```
 
 Invalid Username/Email depends on whether it contains a @ or not
+=======
+### Summary
+- Authenticate user via finding username/email then comparing the password
+- Generate a JWT and return it to the client for authorization
 
+### Error handling
 
 [Back to Contents](#table-of-contents)
 
@@ -208,14 +220,25 @@ Response Status: `404`
   ]
 ```
 
-[Back to Contents](#table-of-contents)
+### Summary
+- Retrieves user object from database which has the ID of `/:id`
+### Error Handling
+Response Status: `400`
+```
+  errors: [{ 'error': 'User not Found' }]
+```
 
+[Back to Contents](#table-of-contents)
 
 # /Valid
 
 ## GET /isUsernamePresent
 ### Summary
 - Checks if the username is present
+
+# /Valid
+
+## GET /isUsernamePresent
 ### -- request payload --
 ```
   username: String
@@ -229,10 +252,14 @@ Response Status: 200
 ### Error Handling
 No Errors
 
+### Summary
+- Checks if the username is present
+### Error Handling
+No errors
+
 [Back to Contents](#table-of-contents)
 
 ## GET /isEmailPresent
-
 ### Summary
 - Checks if the email is present
 
@@ -245,6 +272,9 @@ Response Status: 200
 ```
   present: Boolean
 ```
+
+### Summary
+- Checks if the email is present
 
 ### Error Handling
 No errors
