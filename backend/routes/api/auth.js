@@ -9,39 +9,31 @@ const router = express.Router();
 
 // Route: /api/auth
 
-router.post('/signup', async (req, res) => {
+router.post('/signup', async (req, res, next) => {
 	const { username, email, password } = req.body;
-	try {
-		const user = await User.create({username, email, password});
-		// Code for sending E-Mail here
-		const token = createJwt({ id: user.id });
-		res.status(201).json({ token, username: user.username, id: user.id });
-	} catch (e) {
-		if (e.name === 'ValidationError') {
-			const errors = Object.entries(e.errors).map(([_key, value]) => {
-				if (value.kind.match('^(unique|required)$')) return [value.path || 'error', value.message]; // Unique Validator
-				return [value.path || 'error', value.reason ]; // Custom Error
-			});
-			return res.status(400).json({errors});
-		}
-	}
+	const user = await User.create({username, email, password})
+		.catch(e => next(e));
+	// Code for sending E-Mail here
+	const token = createJwt({ id: user.id });
+	res.status(201).json({ token, username: user.username, id: user.id });
 });
 
 router.post('/login', async (req, res) => {
 	const { loginId, password } = req.body;
 
+	// TODO: Middleware for this
 	const errors = [];
 	if (!loginId) errors.push(['loginId', 'Missing LoginId']);
 	if (!password) errors.push(['password', 'Missing Password']);
 	if (errors.length) return res.status(400).json({ errors });
 
 	const loginRegex = new RegExp(`^${loginId}$`, 'i');
-	const loginType = loginId.match(/@/) ? 'Email' : 'Username'; 
+	const loginObject = loginId.match(/@/) ? { email: loginRegex } : { username: loginRegex }; 
+	const user = await User.findOne(loginObject);
 
-	let user;
-
-	if (loginType === 'Email') user = await User.findOne({ email: loginRegex });
-	else user = await User.findOne({ username: loginRegex });
+	// Alternatives:
+	// const user = await User.findOne(loginId.match(/@/) ? { email: loginRegex } : { username: loginRegex });
+	// const user = await User.findOne({ $or: [{username: loginRegex}, {email: loginRegex}] });
 
 	if (!user) return res.status(401).send({ errors: [[ 'loginId', 'Invalid Login' ]] });
 
