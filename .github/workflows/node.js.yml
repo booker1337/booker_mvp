@@ -31,8 +31,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     
     - run: npm ci
-    - run: npm run lint:fix
     - run: npm test
+    - run: npm run lint:fix
       env:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
         DB_TEST_URI: ${{ secrets.DB_TEST_URI }}
