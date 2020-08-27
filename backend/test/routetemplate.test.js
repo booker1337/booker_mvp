@@ -9,7 +9,7 @@ const { loadDatabase } = require('../loaders/database');
 const api = supertest(app);
 
 beforeAll(async () => {
-	await loadDatabase(config.DB_TEST_URI);
+	await loadDatabase(config.DB_URI);
 }, 60 * 1000);
 
 describe('Check if server is running', () => {

@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 
@@ -10,7 +9,7 @@ const { loadDatabase } = require('./../../loaders/database');
 const api = supertest(app);
 
 beforeAll(async () => {
-	await loadDatabase(config.DB_TEST_URI);
+	await loadDatabase(config.DB_URI);
 	await User.deleteMany({});
 	await User.create({
 		'username': 'ryan',
