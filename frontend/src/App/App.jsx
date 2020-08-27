@@ -49,8 +49,7 @@ function App() {
   return (
     <div className="App" style={{height: '100%'}}>
       <NavBar HamburgerClickHandler={this.HamburgerToggleClickHandler} />
-      
-      <Hamburger show={this.state.HamburgerOpen} />
+      <Hamburger show={HamburgerOpen} toggleHamburgerOpen={toggleHamburgerOpen} />
       {Backdrop}
       <Router>
         <Switch>
