@@ -19,8 +19,8 @@ router.post('/signup', async (req, res) => {
 	} catch (e) {
 		if (e.name === 'ValidationError') {
 			const errors = Object.entries(e.errors).map(([_key, value]) => {
-				if (value.kind.match('^(unique|required)$')) return { [value.path || 'error']: value.message }; // Unique Validator
-				return { [value.path || 'error']: value.reason }; // Custom Error
+				if (value.kind.match('^(unique|required)$')) return [value.path || 'error', value.message]; // Unique Validator
+				return [value.path || 'error', value.reason ]; // Custom Error
 			});
 			return res.status(400).json({errors});
 		}
