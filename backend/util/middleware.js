@@ -20,14 +20,16 @@ const checkAuthToken = (req, _res, next) => {
 };
 
 const errorHandler = (err, req, res, _next) => {
-	if (err.name === 'JsonWebTokenError') return res.status(401).json({ errors: ['Invalid JWT'] });
+	if (err.name === 'JsonWebTokenError') return res.status(401).json({ errors: ['jwt', 'Invalid JWT'], name: err.name });
 	if (err.name === 'ValidationError') {
-		const errors = Object.entries(err.errors).map(([_key, value]) => {
-			if (value.kind.match('^(unique|required)$')) return value.message; // Unique Validator
-			return value.reason; // Custom Error
+		const errors = Object.entries(e.errors).map(([_key, value]) => {
+			if (value.kind.match('^(unique|required)$')) return [value.path || 'error', value.message]; // Unique Validator
+			return [value.path || 'error', value.reason ]; // Custom Error
 		});
 		return res.status(400).json({errors});
 	}
+	if (err.errors) return res.status(401).json({ errors: err });
+	
 	// Add errors here as we find them
 	logger.error(`${req.method} ${req.path} - ${JSON.stringify(req.body)}`, err);
 	return res.status(400).json({ message: err.message, name: err.name,  err});
