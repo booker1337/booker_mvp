@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 
 const User = require('../../models/UserModel');
+const { checkAuthToken } = require('./../../util/middleware');
 const { createJwt } = require('./../../util/jwtHelpers');
 
 const router = express.Router();
@@ -49,6 +50,12 @@ router.post('/login', async (req, res) => {
 
 	const token = createJwt({ id: user.id });
 	res.json({ token, id: user.id, username: user.username });
+});
+
+router.get('/', checkAuthToken, async (req, res) => {
+	const user = await User.findById(req.token.id);
+	if (!user) return res.sendStatus(404);
+	res.sendStatus(200);
 });
 
 module.exports = router;
