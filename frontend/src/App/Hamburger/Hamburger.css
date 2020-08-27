@@ -7,6 +7,11 @@
     width:70%;
     max-width: 400px;
     z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+}
+.Hamburger.open{
+ transform: translateX(0);   
 }
 .Hamburger ul{
     list-style: none;
@@ -20,8 +25,13 @@
 .Hamburger a{
     text-decoration: none;
 }
-
 .Hamburger a:hover,
 .Hamburger a:active{
     color: orange;
+}
+
+@media (min-width: 769px) {
+    .Hamburger{
+        display: none;
+    }
 }

@@ -23,9 +23,9 @@ const PrivateRoute = ({ privateRender, ...routeProps }) => (
   />
 );
 
-state = {
-  HamburgerOpen: false
-};
+//State = {HamburgerOpen: false};
+
+const [HamburgerOpen, setHamburgerOpen] = useState(false);
 
 const HamburgerToggleClickHandler = () => {
   this.setState((prevState) => {
@@ -42,14 +42,15 @@ function App() {
 
   let Backdrop;
 
-  if (this.state.HamburgerOPen) {
+  if (this.state.HamburgerOpen) {
     Backdrop = <Backdrop click={this.BackdropClickHandler} />;
   }
 
   return (
     <div className="App" style={{height: '100%'}}>
       <NavBar HamburgerClickHandler={this.HamburgerToggleClickHandler} />
-      {Hamburger}
+      
+      <Hamburger show={this.state.HamburgerOpen} />
       {Backdrop}
       <Router>
         <Switch>

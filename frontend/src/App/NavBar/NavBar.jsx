@@ -5,11 +5,10 @@ import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
 import HamburgerToggle from '../Hamburger/HamburgerToggle';
-import { propTypes } from "react-bootstrap/esm/Image";
 
 export default function NavBar() {
   return (
-      <header clasName="NavBar">
+      <header className="NavBar">
         <nav className="NavBar_Navigation">
             <div className="NavBar_logo"><a href="/">B O O K E R</a></div>
             <div className="spacer" />
@@ -22,8 +21,8 @@ export default function NavBar() {
                 <li class="SignIn"><a href="/">SIGN IN</a></li>
               </ul>
             </div>
-            <div>
-            <HamburgerToggle click={props.HamburgerClickHandler} />
+            <div className="NavBar_toggle-button">
+              <HamburgerToggle click={props.HamburgerClickHandler} />
           </div>
         </nav>
       </header>

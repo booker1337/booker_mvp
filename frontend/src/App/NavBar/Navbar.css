@@ -45,3 +45,15 @@
 .spacer{
     flex: 1;
 }
+
+@media (max-width: 768px) {
+    .NavBar_Navigation-Items{
+        display: none;
+    }
+}
+
+@media (min-width: 769px) {
+    .NavBar_toggle-button{
+        display: none;
+    }
+}
