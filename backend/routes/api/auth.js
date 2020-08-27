@@ -18,8 +18,8 @@ router.post('/signup', async (req, res) => {
 	} catch (e) {
 		if (e.name === 'ValidationError') {
 			const errors = Object.entries(e.errors).map(([_key, value]) => {
-				if (value.kind.match('^(unique|required)$')) return { [value.path || 'error']: value.message }; // Unique Validator
-				return { [value.path || 'error']: value.reason }; // Custom Error
+				if (value.kind.match('^(unique|required)$')) return [value.path || 'error', value.message]; // Unique Validator
+				return [value.path || 'error', value.reason ]; // Custom Error
 			});
 			return res.status(400).json({errors});
 		}
@@ -29,16 +29,24 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
 	const { loginId, password } = req.body;
 
-	const loginRegex = new RegExp(`^${req.params.email}$`, 'i');
+	const errors = [];
+	if (!loginId) errors.push(['loginId', 'Missing LoginId']);
+	if (!password) errors.push(['password', 'Missing Password']);
+	if (errors.length) return res.status(400).json({ errors });
+
+	const loginRegex = new RegExp(`^${loginId}$`, 'i');
 	const loginType = loginId.match(/@/) ? 'Email' : 'Username'; 
+
 	let user;
+
 	if (loginType === 'Email') user = await User.findOne({ email: loginRegex });
 	else user = await User.findOne({ username: loginRegex });
 
-	if (!user) return res.status(400).send({ errors: [{ loginId: `Invalid ${loginType}` } ]});
+	if (!user) return res.status(401).send({ errors: [[ 'loginId', 'Invalid Login' ]] });
 
 	const isValid = await bcrypt.compare(password, user.password);
-	if (!isValid) return res.status(400).send({ errors: [{ password: 'Invalid Password' }] });
+	if (!isValid) return res.status(401).send({ errors: [[ 'password', 'Invalid Password' ]]});
+
 	const token = createJwt({ id: user.id });
 	res.json({ token, id: user.id, username: user.username });
 });
