@@ -1,4 +1,5 @@
 # 📕 Booker 
+Booker is a platform that connects book debaters together based on their argument style. The platform will first gather your reading history. You will then want to leave some reviews on the books you have read - this will help others to gauge your argument style and choose if you are compatible. Once all your information is ready to go, the Booker algorithm will find all the people who have written reviews about your recently read books - and it will offer their reviews for your approval or disapproval. If two people approve of each other’s reviews - then it’s a match!
 
 Built with the MERN Stack.
 
