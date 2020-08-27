@@ -20,6 +20,6 @@ const config = {
 	LOGGER_LEVEL: process.env.LOGGER_LEVEL,
 };
 
-logger.silly('Config Settings: ', config);
+logger.error('Config Settings: ', config);
 
 module.exports = config;
