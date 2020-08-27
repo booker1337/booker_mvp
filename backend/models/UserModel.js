@@ -61,11 +61,4 @@ userSchema.methods.toJSON = function () {
 	return obj;
 };
 
-userSchema.methods.validatePassword = function (password, cb) {
-	bcrypt.compare(password, this.password, (err, res) => {
-		if(err) return cb(err);
-		cb(null, res);
-	});
-};
-
 module.exports = mongoose.model('User', userSchema);
