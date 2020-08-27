@@ -32,7 +32,7 @@ jobs:
     
     - run: npm ci
     - run: npm test
-    - run: npm run lint:fix
       env:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
         DB_TEST_URI: ${{ secrets.DB_TEST_URI }}
+    - run: npm run lint:fix
