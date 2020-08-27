@@ -10,4 +10,10 @@ router.get('/' , checkAuthToken, async (req, res) => {
 	res.json({ user });
 });
 
+router.get('/profile/:username', async (req, res) => {
+	const user = await User.findOne({ username: new RegExp(`^${req.params.username}$`, 'i') });
+	if (!user) return res.status(404).json({ errors: [{ 'username': 'No match was found' }]});
+	res.json(user);
+});
+
 module.exports = router;
