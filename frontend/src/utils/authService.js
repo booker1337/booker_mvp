@@ -1,45 +1,51 @@
 import tokenService from './tokenService';
 
-function getUser() {
-  return tokenService.getUserFromToken();
-}
+const getLocalUser = () => tokenService.getUserFromToken();
 
-function logout() {
-  tokenService.removeToken();
-}
+const authUtil = async (res, setUser, history, username) => {
+	if(res.ok) {
+		const { token } = await res.json();
+		tokenService.setToken(token);
 
-function login(userInfo, cb) {
-  return fetch('/api/auth/login', {
+		const id = getLocalUser();
+		setUser(id);
+
+		history.push(`/profile`);
+	}
+	else {
+		const { errors } = await res.json();
+		console.log(errors);
+	}
+};
+
+const getSignup = (setUser, history) => async (payload) => {
+	const res = await fetch('/auth/signup', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ userInfo })
-	})
-		.then(res => res.json())
-		.then(body => {
-			if(body.token) tokenService.setToken(body.token)
-			else var error = true;
-			cb(error);
-		})
-		.catch(console.log);
-}
+		body: JSON.stringify(payload)
+	});
+	
+	authUtil(res, setUser, history, payload.username);
+};
 
-function signup(userInfo, cb) {
-	fetch('/api/auth/signup', {
+const getLogin = (setUser, history) => async (payload) => {
+	const res = await fetch('/auth/login', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ userInfo })
-	})
-		.then(res => res.json())
-		.then(body => {
-			if(body.token) tokenService.setToken(body.token);
-			cb(body.error);
-		})
-		.catch(console.log);	
-}
+		body: JSON.stringify(payload),
+	});
+	
+	authUtil(res, setUser, history, payload.username);
+};
+
+const getLogout = (setUser) => () => {
+	tokenService.removeToken();
+	setUser(undefined);
+};
 
 export default {
-  signup, 
-  getUser,
-  logout,
-  login
+	getLocalUser,
+	getSignup, 
+  getLogout,
+  getLogin,
 };
