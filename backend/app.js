@@ -18,6 +18,11 @@ app.use(requestLogger); // Logger for routes (Only displays on 'silly' LOGGER_LE
 
 app.use(express.static('build')); // React build
 
+// Check if the server is running
+app.get('/api/status', (_req, res) => res.status(200).json({ status: 200 }));
+app.head('/api/status', (_req, res) => res.status(200).end());
+
+// API Routes
 app.use('/api/auth', appRoutes);
 app.use('/api/users', usersRotes);
 app.use('/api/valid', validRoutes);
