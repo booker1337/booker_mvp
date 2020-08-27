@@ -10,7 +10,7 @@ const { loadDatabase } = require('../../loaders/database');
 const api = supertest(app);
 
 beforeAll(async () => {
-	await loadDatabase(config.DB_TEST_URI);
+	await loadDatabase(config.DB_URI);
 }, 60 * 1000); // Allow 60 seconds for database to connect, Atlas takes ages to connect
 
 describe('Normal User Signup', () => {
