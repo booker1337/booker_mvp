@@ -127,6 +127,14 @@ describe('Valid Tokens', () => {
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 	});
+
+	test('Different Secret', async () => {
+		const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+		await api
+			.get('/api/auth')
+			.set('Authorization', `Bearer ${token}`)
+			.expect(401);
+	});
 });
 
 
