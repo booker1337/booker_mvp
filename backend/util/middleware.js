@@ -15,7 +15,6 @@ const checkAuthToken = (req, res, next) => {
 	
 	const [, token] = authorization.split(' ');
 	try {
-
 		req.token = jwt.verify(token, config.JWT_SECRET);
 		next();
 	} catch (e) {
