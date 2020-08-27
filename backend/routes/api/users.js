@@ -4,6 +4,7 @@ const { checkAuthToken } = require('./../../util/middleware');
 
 // Route: /api/users
 
+
 router.get('/:id' , checkAuthToken, async (req, res) => {
 	let user = await User.findById(req.token.user.id);
 	if (!user) return res.status(404).json({ errors: [{ 'error': 'User not Found' }] });

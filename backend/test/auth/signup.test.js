@@ -121,12 +121,10 @@ describe('User Signup with Missing Fields', () => {
 			.expect('Content-Type', /application\/json/);
 
 		expect(res.body.token).not.toBeDefined();
+
 		expect(res.body.errors).toContainEqual(['username', 'Missing Username Field']);
 		expect(res.body.errors).toContainEqual(['email', 'Missing Email Field']);
 		expect(res.body.errors).toContainEqual(['password', 'Missing Password Field']);
-		expect(res.body.errors).toContainEqual({'username': 'Missing Username Field'});
-		expect(res.body.errors).toContainEqual({'email': 'Missing Email Field'});
-		expect(res.body.errors).toContainEqual({'password': 'Missing Password Field'});
 		expect(res.body.errors.length).toBe(3);
 		const users = await User.find();
 		expect(users.length).toBe(0);
@@ -159,7 +157,6 @@ describe('User Signup with pre-Existing User', () => {
 
 		expect(res.body.token).not.toBeDefined();
 		expect(res.body.errors).toContainEqual(['email', 'Email is already registered!']);
-		expect(res.body.errors).toEqual([{'email': 'Email is already registered!'}]);
 		expect(res.body.errors.length).toBe(1);
 		const users = await User.find();
 		expect(users.length).toBe(1);
@@ -178,7 +175,6 @@ describe('User Signup with pre-Existing User', () => {
 
 		expect(res.body.token).not.toBeDefined();
 		expect(res.body.errors).toContainEqual(['email', 'Email is already registered!']);
-		expect(res.body.errors).toEqual([{'email': 'Email is already registered!'}]);
 		expect(res.body.errors.length).toBe(1);
 		let users = await User.find();
 		expect(users.length).toBe(1);
@@ -195,7 +191,6 @@ describe('User Signup with pre-Existing User', () => {
 
 		expect(res.body.token).not.toBeDefined();
 		expect(res.body.errors).toContainEqual(['email', 'Email is already registered!']);
-		expect(res.body.errors).toEqual([{'email': 'Email is already registered!'}]);
 		expect(res.body.errors.length).toBe(1);
 		users = await User.find();
 		expect(users.length).toBe(1);
@@ -230,7 +225,6 @@ describe('User Signup with pre-Existing User', () => {
 
 		expect(res.body.token).not.toBeDefined();
 		expect(res.body.errors).toContainEqual(['username', 'Username is already registered!']);
-		expect(res.body.errors).toEqual([{'username': 'Username is already registered!'}]);
 		expect(res.body.errors.length).toBe(1);
 		const users = await User.find();
 		expect(users.length).toBe(1);
@@ -249,7 +243,6 @@ describe('User Signup with pre-Existing User', () => {
 
 		expect(res.body.token).not.toBeDefined();
 		expect(res.body.errors).toContainEqual(['username', 'Username is already registered!']);
-		expect(res.body.errors).toEqual([{'username': 'Username is already registered!'}]);
 		expect(res.body.errors.length).toBe(1);
 		let users = await User.find();
 		expect(users.length).toBe(1);
@@ -282,7 +275,6 @@ describe('User Signup with pre-Existing User', () => {
 
 		expect(res.body.token).not.toBeDefined();
 		expect(res.body.errors).toContainEqual(['username', 'Username is already registered!']);
-		expect(res.body.errors).toEqual([{'username': 'Username is already registered!'}]);
 		expect(res.body.errors.length).toBe(1);
 		users = await User.find();
 		expect(users.length).toBe(1);
@@ -300,7 +292,7 @@ describe('User Signup with pre-Existing User', () => {
 			.expect('Content-Type', /application\/json/);
 
 		expect(res.body.token).not.toBeDefined();
-    
+
 		expect(res.body.errors).toContainEqual(['username', 'Username is already registered!']);
 		expect(res.body.errors).toContainEqual(['email', 'Email is already registered!']);
 		expect(res.body.errors.length).toBe(2);
