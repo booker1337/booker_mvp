@@ -7,27 +7,32 @@ const requestLogger = (req, _res, next) => {
 	next();
 };
 
-const checkAuthToken = (req, _res, next) => {
+const checkAuthToken = (req, res, next) => {
+	const authorization = req.get('authorization');
+	if (!/^bearer \S+\.\S+\.\S+$/i.test(authorization)) {
+		return res.status(401).json({ errors: ['jwt', 'Invalid JWT Format'], authorization});
+	}
+	
+	const [, token] = authorization.split(' ');
 	try {
-		const authorization = req.get('authorization');
-		const [bearer, token] = authorization.split(' ');
-		if (!bearer.match(/^bearer$/i)) throw new Error();
 		req.token = jwt.verify(token, config.JWT_SECRET);
 		next();
 	} catch (e) {
-		throw new jwt.JsonWebTokenError('Invalid Token');
+		res.status(401).json({ errors: ['jwt', 'Invalid JWT']});
 	}
 };
 
+// Removing _next will cause error middleware not to function
 const errorHandler = (err, req, res, _next) => {
-	if (err.name === 'JsonWebTokenError') return res.status(401).json({ errors: ['jwt', 'Invalid JWT'], name: err.name });
+
 	if (err.name === 'ValidationError') {
-		const errors = Object.entries(e.errors).map(([_key, value]) => {
+		const errors = Object.entries(err.errors).map(([_key, value]) => {
 			if (value.kind.match('^(unique|required)$')) return [value.path || 'error', value.message]; // Unique Validator
 			return [value.path || 'error', value.reason ]; // Custom Error
 		});
 		return res.status(400).json({errors});
 	}
+
 	if (err.errors) return res.status(401).json({ errors: err });
 	
 	// Add errors here as we find them

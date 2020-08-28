@@ -36,8 +36,7 @@ Response: `200`
 
 ## GET /auth
 
-~ Work in Progress ~
-Will be used to just test JWT Authorization of routes
+Will be used to test JWT Authorization of routes, However it may be useful later on
 
 ### Headers
 ```
@@ -46,15 +45,22 @@ Will be used to just test JWT Authorization of routes
 
 ### -- valid response payload --
 Response: `200`
-```
-  < User Object >
-```
 
 ### Summary:
 - For testing JWT Authentication, and getting the appropriate user data of the id inside the token
 - 
 ### Error handling
-- WIP
+Response: `404`
+If user is not found
+
+Response: `401`
+JWT errors
+```
+  errors: [
+    ['jwt', 'Invalid JWT Format'], // Doesn't use Bearer <Token>
+    ['jwt', 'Invalid JWT'] // If the jwt library considers it invalid
+  ]
+```
 
 [Back to Contents](#table-of-contents)
 
@@ -94,14 +100,14 @@ Response: `400`
 with a Returns a list of errors (only the errors that occur is in the list)
 ```
   errors : [
-	  { 'username', 'Invalid Username' },
-	  { 'email',    'Invalid Email' },
-	  { 'password', 'Invalid Password' },
-	  { 'username', 'Missing Username Field' },
-	  { 'email',    'Missing Email Field' },
-	  { 'password', 'Missing Password Field' },
-	  { 'email',    'Email is already Registered' },
-	  { 'username', 'Username is already Registered' }
+	  [ 'username', 'Invalid Username' ],
+	  [ 'email'   , 'Invalid Email' ],
+	  [ 'password', 'Invalid Password' ],
+	  [ 'username', 'Missing Username Field' ],
+	  [ 'email'   , 'Missing Email Field' ],
+	  [ 'password', 'Missing Password Field' ],
+	  [ 'email'   , 'Email is already Registered' ],
+	  [ 'username', 'Username is already Registered' ]
   ]
 ```
 
@@ -110,9 +116,6 @@ with a Returns a list of errors (only the errors that occur is in the list)
 ---
 
 ## POST /auth/login
-
-**Warning** - This route hasn't been tested fully yet! Look out for bugs, and if you find any, look at the source code.
-
 ### Summary
 - Authenticate user via finding username/email then comparing the password
 - Generate a JWT and return it to the client for authorization
@@ -128,16 +131,16 @@ with a Returns a list of errors (only the errors that occur is in the list)
 ```
 ### -- token payload --
 ```
-  username: String
+  id: String
 ```
 
 ### Error handling
 Response: `401`
+One of the following:
 ```
   errors: [
-    { 'loginId' : 'Invalid Username' }
-    { 'loginId': 'Invalid Email' }
-    { 'password': 'Invalid Password' }
+    [ 'loginId' , 'Invalid Login' ],
+    [ 'password', 'Invalid Password' ]
   ]
 ```
 
@@ -146,43 +149,45 @@ Invalid Username/Email depends on whether it contains a @ or not
 
 [Back to Contents](#table-of-contents)
 
-# /User
+# /Users
 
-## GET /user/:id
-
-WIP
+## GET /users/user
 
 ### Summary
-- Retrieves user object from database which has the ID of `/:id`
+- Authenticated Route
+- Retrieves user object from database which has the ID inside the token
 
 ### -- request headers --
 ```
   Authentication: Bearer <Token>
 ```
 
-### -- request params --
-```
-  /user/<INSERT ID HERE>
-```
 ### -- response payload --
 Response Status: `200`
 ```
-  username: String
-  email: String
-  verified: Boolean
+  <User Object>
 ```
 
 ### Error Handling
-Response Status: `400`
+Response Status: `404`
 ```
   errors: [
-    'error': 'User not Found'
+    ['error': 'User not Found']
+  ]
+```
+
+Response: `401`
+JWT errors
+```
+  errors: [
+    ['jwt', 'Invalid JWT Format'], // Doesn't use Bearer <Token>
+    ['jwt', 'Invalid JWT'] // If the jwt library considers it invalid
   ]
 ```
 
 [Back to Contents](#table-of-contents)
 
-## GET /user/profile/:username
+## GET /users/profile/:username
 
 Get the user matching the username
 
@@ -194,17 +199,17 @@ Get the user matching the username
 ### -- response payload --
 Response Status: `200`
 ```
-  User Object
+  <User Object>
 ```
 
 ### Summary
-- Retrieves user object from database which has the ID of `/:id`
+- Retrieves user object from database which has the username of `/:username`
 
 ### Error Handling
 Response Status: `404`
 ```
   errors: [
-    { 'username': 'No match was found' }
+    [ 'username': 'No match was found' ]
   ]
 ```
 
@@ -216,6 +221,13 @@ Response Status: `404`
 ## GET /isUsernamePresent
 ### Summary
 - Checks if the username is present
+
+
+### -- request params --
+```
+  /user/profile/:username
+```
+
 ### -- request payload --
 ```
   username: String
@@ -229,12 +241,20 @@ Response Status: 200
 ### Error Handling
 No Errors
 
+Note: 
+Make sure the username parameter is never empty or you'll get a 404 response due to it not reaching this middleware
+
 [Back to Contents](#table-of-contents)
 
 ## GET /isEmailPresent
 
 ### Summary
 - Checks if the email is present
+
+### -- request params --
+```
+  /user/profile/:email
+```
 
 ### -- request payload --
 ```
@@ -248,6 +268,9 @@ Response Status: 200
 
 ### Error Handling
 No errors
+
+Note: 
+Make sure the email parameter is never empty or you'll get a 404 response due to it not reaching this middleware
 
 [Back to Contents](#table-of-contents)
 
