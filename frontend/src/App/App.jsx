@@ -5,7 +5,6 @@ import "./App.css";
 
 import NavBar from './NavBar/NavBar';
 import Hamburger from './Hamburger/Hamburger';
-import Backdrop from './Backdrop/Backdrop';
 
 import SignupPage from './SignupPage/SignupPage';
 import LoginPage from './LoginPage/LoginPage';
@@ -23,34 +22,16 @@ const PrivateRoute = ({ privateRender, ...routeProps }) => (
   />
 );
 
-//State = {HamburgerOpen: false};
-
-const [HamburgerOpen, setHamburgerOpen] = useState(false);
-
-const HamburgerToggleClickHandler = () => {
-  this.setState((prevState) => {
-    return {HamburgerOpen: !prevState.HamburgerOpen};
-  });
-};
-
-const BackdropClickhandler = () => {
-  this.setState({HamburgerOpen: false});
-};
-
 function App() {
   const [user, setUser] = useState(authService.getUser() || undefined);
+  const [HamburgerOpen, setHamburgerOpen] = useState(false);
 
-  let Backdrop;
-
-  if (this.state.HamburgerOpen) {
-    Backdrop = <Backdrop click={this.BackdropClickHandler} />;
-  }
+  const HamburgerToggleClickHandler = () => setHamburgerOpen(!HamburgerOpen);
 
   return (
     <div className="App" style={{height: '100%'}}>
       <NavBar HamburgerClickHandler={this.HamburgerToggleClickHandler} />
-      <Hamburger show={HamburgerOpen} toggleHamburgerOpen={toggleHamburgerOpen} />
-      {Backdrop}
+      <Hamburger show={this.state.HamburgerOpen} click={this.HamburgerToggleClickHandler} />
       <Router>
         <Switch>
           <Route exact path="/" render={props => <div>Landing Page</div>} />

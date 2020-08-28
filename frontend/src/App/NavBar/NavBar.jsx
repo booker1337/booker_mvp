@@ -1,8 +1,5 @@
 import React from "react";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
-import { Nav, Navbar, NavItem } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 
 import HamburgerToggle from '../Hamburger/HamburgerToggle';
 
@@ -22,7 +19,7 @@ export default function NavBar() {
               </ul>
             </div>
             <div className="NavBar_toggle-button">
-              <HamburgerToggle click={props.HamburgerClickHandler} />
+              <HamburgerToggle click={this.props.HamburgerToggleClickHandler} />
           </div>
         </nav>
       </header>
