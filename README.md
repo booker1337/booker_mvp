@@ -25,6 +25,7 @@ Built with the MERN Stack.
 			- [DB_URIs](#db_uris)
 			- [JWT_SECRET](#jwt_secret)
 			- [LOGGER_LEVEL](#logger_level)
+			- [BOOKS_API_KEY](#books_api_key)
 	- [Initializing your Heroku app](#initializing-your-heroku-app)
 		- [Logging in to Heroku](#logging-in-to-heroku)
 		- [Creating a heroku app.](#creating-a-heroku-app)
@@ -130,6 +131,7 @@ DB_URI="<insert your URI here>"
 DB_TEST_URI="<insert your testing URI here>"
 JWT_SECRET="<Insert random 64 bytes>"
 LOGGER_LEVEL="info"
+BOOKS_API_KEY="<Google Books API Key>"
 ```
 For example:
 ```
@@ -137,6 +139,7 @@ DB_URI="mongodb+srv://user:pass@cluster.id.mongodb.net/dev?retryWrites=true"
 DB_TEST_URI="mongodb+srv://user:pass@cluster.id.mongodb.net/test?retryWrites=true"
 JWT_SECRET=<Insert random 64 bytes>
 LOGGER_LEVEL="info"
+BOOKS_API_KEY="r4nd0m-n0mb3rs"
 ```
 #### DB_URIs
 For the `DB_URI` and `DB_TEST_URI`, make sure they are seperate databases, signified by the end of the connection string `/dev` or `/test`.
@@ -162,6 +165,8 @@ Setting it to `info` will make it only display vital information, like the initi
 
 Setting it to `error`, or any other string, will cause only errors to display.
 
+#### BOOKS_API_KEY
+Get an API key from [Google's Developer Console](https://console.developers.google.com/apis/credentials) and verify your app, or ask one of the project maintainers for an API key.
 
 ## Initializing your Heroku app
 If you haven't already, [Install Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli), and make a Heroku account
