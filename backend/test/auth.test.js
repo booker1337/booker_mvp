@@ -1,232 +1,143 @@
-const config = require('./../config');
-const { loadDatabase } = require('../loaders/database');
-const mongoose = require('mongoose');
-const app = require('../app');
-const supertest = require('supertest');
+// A Template for route testing
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const supertest = require('supertest');
+
+const app = require('../app');
+const config = require('./../config');
 const User = require('../models/UserModel');
+const { loadDatabase } = require('../loaders/database');
+
 const api = supertest(app);
 
 beforeAll(async () => {
-	await loadDatabase(config.DB_TEST_URI);
-	await User.deleteMany({});
-}, 120 * 1000); // Allow 120 seconds for database to connect, Atlas takes a while
+	await loadDatabase(config.DB_URI);
+}, 60 * 1000);
 
-describe('User Signup', () => {
-	afterEach(async () => {
+describe('Invalid JWT Format', () => {
+	test('No Auth Header', async () => {
+		const res = await api
+			.get('/api/auth')
+			.expect(401)
+			.expect('Content-Type', /application\/json/);
+
+		expect(res.body.errors).toEqual(['jwt', 'Invalid JWT Format']);
+	});
+
+	test('Empty Auth Header', async () => {
+		const res = await api
+			.get('/api/auth')
+			.set('Authorization', '')
+			.expect(401);
+
+		expect(res.body.errors).toEqual(['jwt', 'Invalid JWT Format']);
+	});
+
+	test('Only Bearer', async () => {
+		const res = await api
+			.get('/api/auth')
+			.set('Authorization', 'Bearer')
+			.expect(401);
+
+		expect(res.body.errors).toEqual(['jwt', 'Invalid JWT Format']);
+	});
+
+	test('Bearer & Random & Invalid Token', async () => {
+		const res = await api
+			.get('/api/auth')
+			.set('Authorization', 'Bearer RandomInvalidJWT')
+			.expect(401);
+
+		expect(res.body.errors).toEqual(['jwt', 'Invalid JWT Format']);
+	});
+});
+
+describe('Invalid JWT', () => {
+	test('Random & Invalid Token', async () => {
+		const res = await api
+			.get('/api/auth')
+			.set('Authorization', 'bearer a.b.c')
+			.expect(401);
+
+		expect(res.body.errors).toEqual(['jwt', 'Invalid JWT']);
+	});
+
+	test('Random & Invalid Token', async () => {
+		const res = await api
+			.get('/api/auth')
+			.set('Authorization', 'Bearer 1.2.3')
+			.expect(401);
+
+		expect(res.body.errors).toEqual(['jwt', 'Invalid JWT']);
+	});
+});
+
+describe('Valid Tokens', () => {
+	beforeEach(async () => {
 		await User.deleteMany({});
 	});
 
-	test('With Valid Fields', async () => {
-		const res = await api
+	test('Existing User', async () => {
+		const requestBody = {
+			'username': 'Ryan',
+			'password': 'test',
+			'email': 'ryanname@test.com',
+		};
+
+		let res = await api
 			.post('/api/auth/signup')
-			.send({
-				'username': 'ryan',
-				'password': 'test',
-				'email': 'ryanname@test.com',
-			})
+			.send(requestBody)
 			.expect(201)
 			.expect('Content-Type', /application\/json/);
 		
-		const token = jwt.verify(res.body.token, config.JWT_SECRET);
-		expect(token).toBeDefined();
-		const users = await User.find();
-		expect(users.length).toBe(1);
-		expect(users[0].verified).toBeFalsy();
-		expect(token.id).toBe(users[0]._id.toString());
-		expect(res.body.errors).not.toBeDefined();
+		expect(res.body.token).toBeDefined();
+		expect(res.body.id).toBeDefined();
+		const token = res.body.token;
+
+		const decodedToken = jwt.verify(token, config.JWT_SECRET);
+		expect(decodedToken.id).toBe(res.body.id);
+
+		res = await api
+			.get('/api/auth')
+			.set('Authorization', `Bearer ${token}`)
+			.expect(200);
 	});
 
-	test('With Missing Email', async () => {
-		const res = await api
-			.post('/api/auth/signup')
-			.send({
-				'username': 'ryan',
-				'password': 'test',
-			})
-			.expect(400)
-			.expect('Content-Type', /application\/json/);
-
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Missing Email Field');
-		expect(res.body.errors.length).toBe(1);
-		const users = await User.find();
-		expect(users.length).toBe(0);
-	});
-
-	test('With Missing Username', async () => {
-		const res = await api
-			.post('/api/auth/signup')
-			.send({
-				'password': 'test',
-				'email': 'ryanname@test.com',
-			})
-			.expect(400)
-			.expect('Content-Type', /application\/json/);
-
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Missing Username Field');
-		expect(res.body.errors.length).toBe(1);
-		const users = await User.find();
-		expect(users.length).toBe(0);
-	});
-
-	test('With Missing Password', async () => {
-		const res = await api
-			.post('/api/auth/signup')
-			.send({
-				'username': 'ryan',
-				'email': 'ryanname@test.com',
-			})
-			.expect(400)
-			.expect('Content-Type', /application\/json/);
-
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Missing Password Field');
-		expect(res.body.errors.length).toBe(1);
-		const users = await User.find();
-		expect(users.length).toBe(0);
-	});
-});
-
-describe('User Signup with pre-Existing User', () => {
-	beforeAll(async () => {
-		await User.create({
-			'username': 'ryan',
+	test('Deleted User', async () => {
+		const requestBody = {
+			'username': 'Ryan',
 			'password': 'test',
 			'email': 'ryanname@test.com',
-		});
-	});
+		};
 
-	afterAll(async () => {
-		await User.deleteMany({});
-	});
-
-	test('With Existing Email', async () => {
-		const res = await api
-			.post('/api/auth/signup')
-			.send({
-				'username': 'seconduser',
-				'password': 'test',
-				'email': 'ryanname@test.com',
-			})
-			.expect(400)
-			.expect('Content-Type', /application\/json/);
-		
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Email is already registered!');
-		expect(res.body.errors.length).toBe(1);
-		const users = await User.find();
-		expect(users.length).toBe(1);
-	});
-
-	test('With Existing Username', async () => {
-		const res = await api
-			.post('/api/auth/signup')
-			.send({
-				'username': 'ryan',
-				'password': 'test',
-				'email': 'seconduser@test.com',
-			})
-			.expect(400)
-			.expect('Content-Type', /application\/json/);
-		
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Username is already registered!');
-		expect(res.body.errors.length).toBe(1);
-		const users = await User.find();
-		expect(users.length).toBe(1);
-	});
-});
-
-describe('User Signup with invalid Fields', () => {
-
-	test('With Invalid Email', async () => {
 		let res = await api
 			.post('/api/auth/signup')
-			.send({
-				'username': 'ryan',
-				'password': 'test',
-				'email': 'ryanname',
-			})
-			.expect(400)
+			.send(requestBody)
+			.expect(201)
 			.expect('Content-Type', /application\/json/);
+		
+		expect(res.body.token).toBeDefined();
+		expect(res.body.id).toBeDefined();
+		const token = res.body.token;
 
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Invalid Email');
-		expect(res.body.errors.length).toBe(1);
+		await User.deleteOne({ _id: res.body.id });
 
 		res = await api
-			.post('/api/auth/signup')
-			.send({
-				'username': 'ryan',
-				'password': 'test',
-				'email': 'ry@',
-			})
-			.expect(400)
-			.expect('Content-Type', /application\/json/);
-
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Invalid Email');
-		expect(res.body.errors.length).toBe(1);
-
-		res = await api
-			.post('/api/auth/signup')
-			.send({
-				'username': 'ryan',
-				'password': 'test',
-				'email': '@y',
-			})
-			.expect(400)
-			.expect('Content-Type', /application\/json/);
-
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Invalid Email');
-		expect(res.body.errors.length).toBe(1);
-
-
-		const users = await User.find();
-		expect(users.length).toBe(0);
+			.get('/api/auth')
+			.set('Authorization', `Bearer ${token}`)
+			.expect(404);
 	});
 
-	test('With Invalid Username', async () => {
-		const res = await api
-			.post('/api/auth/signup')
-			.send({
-				'username': 'ry',
-				'password': 'test',
-				'email': 'ryanname@test.com',
-			})
-			.expect(400)
-			.expect('Content-Type', /application\/json/);
-
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Invalid Username');
-		expect(res.body.errors.length).toBe(1);
-		const users = await User.find();
-		expect(users.length).toBe(0);
-	});
-
-	test('With Invalid Password', async () => {
-		const res = await api
-			.post('/api/auth/signup')
-			.send({
-				'username': 'ryan',
-				'password': 'te',
-				'email': 'ryanname@test.com',
-			})
-			.expect(400)
-			.expect('Content-Type', /application\/json/);
-
-		expect(res.body.token).not.toBeDefined();
-		expect(res.body.errors).toContain('Invalid Password');
-		expect(res.body.errors.length).toBe(1);
-		const users = await User.find();
-		expect(users.length).toBe(0);
+	test('Different Secret', async () => {
+		const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+		await api
+			.get('/api/auth')
+			.set('Authorization', `Bearer ${token}`)
+			.expect(401);
 	});
 });
+
 
 afterAll(async () => {
 	await mongoose.connection.close();
 });
-

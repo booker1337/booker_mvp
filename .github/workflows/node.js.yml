@@ -34,4 +34,5 @@ jobs:
     - run: npm test
       env:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        DB_TEST_URI: ${{ secrets.DB_TEST_URI }}
+        DB_TEST_URI: ${{ secrets.DB_URI }}
+    - run: npm run lint:fix

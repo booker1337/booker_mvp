@@ -1,12 +1,15 @@
 # 📕 Booker 
+Booker is a platform that connects book debaters together based on their argument style. The platform will first gather your reading history. You will then want to leave some reviews on the books you have read - this will help others to gauge your argument style and choose if you are compatible. Once all your information is ready to go, the Booker algorithm will find all the people who have written reviews about your recently read books - and it will offer their reviews for your approval or disapproval. If two people approve of each other’s reviews - then it’s a match!
+
+Built with the MERN Stack.
 
 # Contents
 - [📕 Booker](#-booker)
 - [Contents](#contents)
 - [Contributing](#contributing)
 - [Trello](#trello)
-- [Documentation](#documentation)
-- [Prerequisites](#prerequisites)
+- [API Documentation](#api-documentation)
+- [Getting Started](#getting-started)
 - [Frontend](#frontend)
 	- [Commands](#commands)
 		- [Starting the Server](#starting-the-server)
@@ -22,6 +25,7 @@
 			- [DB_URIs](#db_uris)
 			- [JWT_SECRET](#jwt_secret)
 			- [LOGGER_LEVEL](#logger_level)
+			- [BOOKS_API_KEY](#books_api_key)
 	- [Initializing your Heroku app](#initializing-your-heroku-app)
 		- [Logging in to Heroku](#logging-in-to-heroku)
 		- [Creating a heroku app.](#creating-a-heroku-app)
@@ -35,17 +39,27 @@
 # Trello
 [Trello Link](https://trello.com/b/3iFDHmdb/booker)
 
-# Documentation
-- [API Docss](./docs/API.md)
+# API Documentation
+- [API Docs](./docs/API.md)
 
-# Prerequisites
-Make sure you have Node.js installed
+# Getting Started
+- Make sure you have a recent version of Node.js installed, preferably `12.x` .
 
-Make sure to change your `npm` shell to git's bash before running these commands
+- Make sure to change your `npm` shell to git's bash before running files commands.
 
 ```
 npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
 ```
+
+- [Host your own MongoDB Instance locally](https://zellwk.com/blog/local-mongodb/), or contact the maintainers for a URI to the MongoDB Atlas Database.
+
+- Setup your `.env` file correctly. [Details](#setting-up-environment-variables)
+
+- Install both frontend and backend packages via `npm install` in the proper directory.
+
+- If you want an overview on what routes are available on the backend, look at the [API Docs](./docs/API.md)
+
+- If you have any issues, contact the maintainers.
 
 # Frontend
 
@@ -116,6 +130,8 @@ and fill out the .env variables
 DB_URI="<insert your URI here>"
 DB_TEST_URI="<insert your testing URI here>"
 JWT_SECRET="<Insert random 64 bytes>"
+LOGGER_LEVEL="info"
+BOOKS_API_KEY="<Google Books API Key>"
 ```
 For example:
 ```
@@ -123,26 +139,34 @@ DB_URI="mongodb+srv://user:pass@cluster.id.mongodb.net/dev?retryWrites=true"
 DB_TEST_URI="mongodb+srv://user:pass@cluster.id.mongodb.net/test?retryWrites=true"
 JWT_SECRET=<Insert random 64 bytes>
 LOGGER_LEVEL="info"
+BOOKS_API_KEY="r4nd0m-n0mb3rs"
 ```
 #### DB_URIs
 For the `DB_URI` and `DB_TEST_URI`, make sure they are seperate databases, signified by the end of the connection string `/dev` or `/test`.
 
 #### JWT_SECRET
-Make sure to generate 64 random bytes for the `JWT_SECRET`, or just run the server you can copy and paste the suggested `JWT_SECRET` into here.
+Make sure to generate 64 random bytes for the `JWT_SECRET`.
+
+Alternatively, you can run the server to generate one, and can copy and paste it into the .env file.
+Otherwise, 
+- Open a node shell via running `node` in the commandline
+- Import the `crypto` library `const crypto = require('crypto')`
+- Generate 64 random bytes in hexadecimal format `crypto.randomBytes(64).toString('hex')`
+- Copy the generated string into your .env file.
 
 #### LOGGER_LEVEL
 All these options are case insensitive.
 
-By default, the logger will always display `info` and `error` logs.
+If left empty, all logs will show up.
 
 Setting this option to `silly` will show all logs, like requests and initial config
 
 Setting it to `info` will make it only display vital information, like the initialization of the server, connection to the database
 
-setting it to `error` will only display errors. This is reccomended to be set inside a testing environment.
+Setting it to `error`, or any other string, will cause only errors to display.
 
-⚠ Any other Non-empty strings will cause no logs to be displayed ⚠
-
+#### BOOKS_API_KEY
+Get an API key from [Google's Developer Console](https://console.developers.google.com/apis/credentials) and verify your app, or ask one of the project maintainers for an API key.
 
 ## Initializing your Heroku app
 If you haven't already, [Install Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli), and make a Heroku account
@@ -166,6 +190,8 @@ heroku logs -t
 ```
 
 ### Heroku Environment Variables
+By default, the `NODE_ENV=production` variable is set. This will allow Heroku to use the production database.
+
 To set Environment variables in heroku,
 ```
 heroku config:set <KEY>=<Value>
@@ -184,8 +210,8 @@ For `&w=majority` in the `DATABASE_URI` the workaround is to set it by default u
 
 - Go to your fork's repo's settings
 - Secrets
-- Add `DB_TEST_URI`, which is your MongoDB URI, configured to use a testing database, if you need one send me or anyers a message and we'll give you it
-- Add `JWT_SECRET`, run the backend without a JWT_SECRET and it'll generate 64 random bytes for you, which you can copy, but tbh you could get away with putting any string
+- Add `DB_URI`, which is your MongoDB URI. If you don't have one, contact the maintainers.
+- Add a `JWT_SECRET`. [Look here on how to generate a good JWT_SECRET](#jwt_secret)
 
 Remember to put the secrets as plain strings without any quotation marks, else it'd break the tests. 
 If you have any questions, feel free to ask Ryan.

@@ -36,7 +36,7 @@ const main = async () => {
 	
 	await loadDatabase(`${config.DB_URI}&w=majority`);
 
-	server.listen(config.PORT, () => logger.info(`Server running on ${config.PORT}`));
+	server.listen(config.PORT, () => logger.info(`Server running on 'https://localhost:${config.PORT}'`));
 };
 
 main();

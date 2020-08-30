@@ -5,6 +5,8 @@ const express = require('express');
 const { requestLogger, errorHandler } = require('./util/middleware');
 const appRoutes = require('./routes/api/auth');
 const usersRotes = require('./routes/api/users');
+const validRoutes = require('./routes/api/valid');
+const bookRoutes = require('./routes/api/books');
 
 const app = express();
 
@@ -17,8 +19,15 @@ app.use(requestLogger); // Logger for routes (Only displays on 'silly' LOGGER_LE
 
 app.use(express.static('build')); // React build
 
+// Check if the server is running
+app.get('/api/status', (_req, res) => res.status(200).json({ status: 200 }));
+app.head('/api/status', (_req, res) => res.status(200).end());
+
+// API Routes
 app.use('/api/auth', appRoutes);
 app.use('/api/users', usersRotes);
+app.use('/api/valid', validRoutes);
+app.use('/api/books', bookRoutes);
 
 app.use(errorHandler); // Handles all uncaught exceptions in routes
 

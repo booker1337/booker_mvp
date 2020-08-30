@@ -11,11 +11,11 @@ import LoginPage from './LoginPage/LoginPage';
 import ProfilePage from './ProfilePage/ProfilePage';
 import NotFoundPage from './NotFoundPage/NotFoundPage';
 
-const PrivateRoute = ({ privateRender, ...routeProps }) => (
+const PrivateRoute = ({ render, ...routeProps }) => (
   <Route
     {...routeProps}
     render={routerProps => {
-      let component = privateRender(routerProps);
+      let component = render(routerProps);
       if(!!component.props.user) return component;
       else return <Redirect to="/signup" />;
     }}
@@ -35,23 +35,26 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" render={props => <div>Landing Page</div>} />
-          <Route path="/login" render={(props) => <LoginPage login={authService.login(setUser, props.history)}/>} />
-          <Route path="/signup" render={(props) => <SignupPage signup={authService.signup(setUser, props.history)}/>} />
-          <Route path="/onboarding" render={props => <div>Onboarding Page</div>} />
-          <PrivateRoute path="/profile" privateRender={props => <ProfilePage user={user} />} />
+          <Route
+            path="/login"
+            render={(props) => <LoginPage login={authService.getLogin(setUser, props.history)}/>}
+          />
+          <Route path="/signup" render={(props) => <SignupPage signup={authService.getSignup(setUser, props.history)}/>} />
+          <Route path="/start" render={props => <div>Onboarding Page</div>} />
+          <PrivateRoute path="/profile" render={props => <ProfilePage user={user} history={props.history} />} />
           <Route render={props => <NotFoundPage />} />
           {/* <PrivateRoute
             exact
             path="/swipe"
-            privateRender={() => <div>Swipe Page</div>}
+            render={() => <div>Swipe Page</div>}
           /> */}
           {/* <PrivateRoute
             path="/matches"
-            privateRender={() => <div>Matches Page</div>}
+            render={() => <div>Matches Page</div>}
           /> */}
           {/* <PrivateRoute
             path="/group/:groupName"
-            privateRender={props => <div>Matches Page: {props.match.params.groupName}</div>}
+            render={props => <div>Matches Page: {props.match.params.groupName}</div>}
           /> */}
         </Switch>
       </Router>

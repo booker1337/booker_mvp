@@ -5,13 +5,13 @@ const uniqueValidatorPlugin = require('mongoose-unique-validator');
 const setEmail = email => {
 	if (!email) throw 'Missing Email Field';
 	if (!email.match(/.+@.+/)) throw 'Invalid Email';
-	return email;
+	return email.toLowerCase();
 };
 
 const setUsername = username => {
 	if (!username) throw 'Missing Username Field';
 	if (!username.match(/^\S{3,}$/)) throw 'Invalid Username';
-	return username;
+	return username[0].toUpperCase() + username.slice(1).toLowerCase();
 };
 
 const setPassword = password => {
@@ -53,16 +53,12 @@ const userSchema = new mongoose.Schema({
 userSchema.plugin(uniqueValidatorPlugin);
 
 userSchema.methods.toJSON = function () {
-	var obj = this.toObject();
+	const obj = this.toObject();
+	obj.id = obj._id.toJSON();
 	delete obj.password;
+	delete obj._id;
+	delete obj.__v;
 	return obj;
-};
-
-userSchema.methods.validatePassword = function (password, cb) {
-	bcrypt.compare(password, this.password, (err, res) => {
-		if(err) return cb(err);
-		cb(null, res);
-	});
 };
 
 module.exports = mongoose.model('User', userSchema);

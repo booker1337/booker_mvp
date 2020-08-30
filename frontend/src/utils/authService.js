@@ -1,11 +1,13 @@
 import tokenService from './tokenService';
 
+const getLocalUser = () => tokenService.getUserFromToken();
+
 const authUtil = async (res, setUser, history, username) => {
 	if(res.ok) {
 		const { token } = await res.json();
 		tokenService.setToken(token);
 
-		const id = tokenService.getUserFromToken();
+		const id = getLocalUser();
 		setUser(id);
 
 		history.push(`/profile`);
@@ -16,7 +18,7 @@ const authUtil = async (res, setUser, history, username) => {
 	}
 };
 
-const signup = (setUser, history) => async (payload) => {
+const getSignup = (setUser, history) => async (payload) => {
 	const res = await fetch('/auth/signup', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
@@ -26,7 +28,7 @@ const signup = (setUser, history) => async (payload) => {
 	authUtil(res, setUser, history, payload.username);
 };
 
-const login = (setUser, history) => async (payload) => {
+const getLogin = (setUser, history) => async (payload) => {
 	const res = await fetch('/auth/login', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
@@ -36,13 +38,14 @@ const login = (setUser, history) => async (payload) => {
 	authUtil(res, setUser, history, payload.username);
 };
 
-const getUser = () => tokenService.getUserFromToken();
-
-const logout = () => tokenService.removeToken();
+const getLogout = (setUser) => () => {
+	tokenService.removeToken();
+	setUser(undefined);
+};
 
 export default {
-	signup, 
-  logout,
-  login,
-	getUser,
+	getLocalUser,
+	getSignup, 
+  getLogout,
+  getLogin,
 };
