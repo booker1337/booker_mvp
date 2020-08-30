@@ -1,8 +1,7 @@
 import tokenService from './tokenService';
-
 const getLocalUser = () => tokenService.getUserFromToken();
 
-const authUtil = async (res, setUser, history, username) => {
+const authUtil = async (res, setUser, history) => {
 	if(res.ok) {
 		const { token } = await res.json();
 		tokenService.setToken(token);
@@ -25,7 +24,7 @@ const getSignup = (setUser, history) => async (payload) => {
 		body: JSON.stringify(payload)
 	});
 	
-	authUtil(res, setUser, history, payload.username);
+	authUtil(res, setUser, history);
 };
 
 const getLogin = (setUser, history) => async (payload) => {
@@ -35,7 +34,7 @@ const getLogin = (setUser, history) => async (payload) => {
 		body: JSON.stringify(payload),
 	});
 	
-	authUtil(res, setUser, history, payload.username);
+	authUtil(res, setUser, history);
 };
 
 const getLogout = (setUser) => () => {
