@@ -1,5 +1,5 @@
 const usernameIsPresent = (username, signal) => ( 
-  fetch(`/valid/isUsernamePresent/${username}`, { signal })
+  fetch(`/api/valid/isUsernamePresent/${username}`, { signal })
     .then(async res => {
       if(res.ok) {
         const body = await res.json();
@@ -14,7 +14,7 @@ const usernameIsPresent = (username, signal) => (
 );
 
 const emailIsPresent = (email, signal) => ( 
-  fetch(`/valid/isEmailPresent/${email}`, { signal })
+  fetch(`/api/valid/isEmailPresent/${email}`, { signal })
     .then(async res => {
       if(res.ok) {
         const body = await res.json();

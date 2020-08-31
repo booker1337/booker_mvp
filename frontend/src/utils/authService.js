@@ -18,7 +18,7 @@ const authUtil = async (res, setUser, history) => {
 };
 
 const getSignup = (setUser, history) => async (payload) => {
-	const res = await fetch('/auth/signup', {
+	const res = await fetch('/api/auth/signup', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(payload)
@@ -28,7 +28,7 @@ const getSignup = (setUser, history) => async (payload) => {
 };
 
 const getLogin = (setUser, history) => async (payload) => {
-	const res = await fetch('/auth/login', {
+	const res = await fetch('/api/auth/login', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(payload),
