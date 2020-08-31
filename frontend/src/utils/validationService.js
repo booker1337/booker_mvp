@@ -29,8 +29,6 @@ const emailIsPresent = (email, signal) => (
 );
 
 async function signupUsernameIsValid(username, values, validation, signal) {
-  console.log(signal);
-
   if(username === '')
     return [false, 'required']
 

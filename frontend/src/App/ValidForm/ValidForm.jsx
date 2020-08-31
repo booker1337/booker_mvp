@@ -41,6 +41,9 @@ const ValidForm = ({ title, actionText, action, fields, validationDelay }) => {
     setTimeoutIds({ ...timeoutIds,
       [fieldname]: 0
     });
+    setAbortControllers({ ...timeoutIds,
+      [fieldname]: undefined
+    });
   };
 
   const getValueSetter = (fieldname) => (value, validatorTimeoutId, abortController) => {
@@ -58,7 +61,9 @@ const ValidForm = ({ title, actionText, action, fields, validationDelay }) => {
   const getChangeHandler = (validator, valueSetter, validationSetter, timeoutId, abortController) => (e) => {
     const value = e.target.value;
 
-    abortController && abortController.abort();
+    if(abortController)
+      abortController.abort();
+
     abortController = new AbortController();
 
     clearTimeout(timeoutId);
