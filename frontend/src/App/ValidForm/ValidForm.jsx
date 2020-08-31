@@ -1,50 +1,100 @@
 import React, { useState } from 'react';
 import { Form, FormInput } from '../Form/Form';
 
-const ValidForm = ({ title, actionText, action, fields }) => {
+const ValidForm = ({ title, actionText, action, fields, validationDelay }) => {
   const fieldnames = Object.keys(fields);
   
-  const [formData, setFormData] = useState(
+  const [values, setValues] = useState(
     fieldnames
-      .reduce((data, fieldname) => ({ ...data,
-        [fieldname]: { value: '', valid: true, feedback: '' }
+      .reduce((vals, fieldname) => ({ ...vals,
+        [fieldname]: ''
       }), {})
   );
 
-  const getFieldSetter = (fieldname) => (value, valid, feedback) => (
-    setFormData({ ...formData,
-      [fieldname]: { value, valid, feedback }
-    })
+  const [validation, setValidation] = useState(
+    fieldnames
+      .reduce((data, fieldname) => ({ ...data,
+        [fieldname]: { valid: true, feedback: '' }
+      }), {})
   );
 
-  const getChangeHandler = (validator, fieldSetter) => (e) => {
+  const [timeoutIds, setTimeoutIds] = useState(
+    fieldnames
+      .reduce((vals, fieldname) => ({ ...vals,
+        [fieldname]: 0
+      }), {})
+  );
+
+  const [abortControllers, setAbortControllers] = useState(
+    fieldnames
+      .reduce((controllers, fieldname) => ({ ...controllers,
+        [fieldname]: undefined
+      }), {})
+  );
+
+  const getValidationSetter = (fieldname) => (valid, feedback) => {
+    setValidation({ ...validation,
+      [fieldname]: { valid, feedback }
+    });
+    setTimeoutIds({ ...timeoutIds,
+      [fieldname]: 0
+    });
+  };
+
+  const getValueSetter = (fieldname) => (value, validatorTimeoutId, abortController) => {
+    setValues({ ...values,
+      [fieldname]: value
+    });
+    setTimeoutIds({ ...timeoutIds,
+      [fieldname]: validatorTimeoutId
+    });
+    setAbortControllers({ ...abortControllers,
+      [fieldname]: abortController
+    });
+  };
+
+  const getChangeHandler = (validator, valueSetter, validationSetter, timeoutId, abortController) => (e) => {
     const value = e.target.value;
-    const [valid, feedback] = validator(value, formData);
-    fieldSetter(value, valid, feedback);
+
+    abortController && abortController.abort();
+    abortController = new AbortController();
+
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(async () => {
+      const [valid, feedback] = await validator(value, values, validation, abortController.signal);
+      validationSetter(valid, feedback);
+    }, validationDelay || 1000/3);
+
+    valueSetter(value, timeoutId, abortController);
   };
 
   const fieldChangeHandlers = (
     fieldnames.reduce((handlers, fieldname) => ({ ...handlers,
-      [fieldname]: getChangeHandler(fields[fieldname].validation, getFieldSetter(fieldname))
+      [fieldname]: (
+        getChangeHandler(
+          fields[fieldname].validation,
+          getValueSetter(fieldname),
+          getValidationSetter(fieldname),
+          timeoutIds[fieldname],
+          abortControllers[fieldname]
+        )
+      )
     }), {})
   );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const values = (
-      Object.keys(formData)
-        .reduce((vals, key) => ({ ...vals,
-          [key]: formData[key].value
-        }), {})
-    );
     action(values);
   };
 
   const renderField = (fieldname) => (
     <FormInput
       key={fieldname}
-      data={formData[fieldname]}
       name={fieldname}
+      value={values[fieldname]}
+      valid={validation[fieldname].valid}
+      feedback={validation[fieldname].feedback}
       label={fields[fieldname].label}
       type={fields[fieldname].type}
       autoComplete={fields[fieldname].autoComplete}

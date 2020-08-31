@@ -1,21 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export const FormInput = ({ name, label, data, type, autoComplete, handleChange }) => {
-  const feedbackColor = (data.valid === 'warning') ? 'warning' : (data.valid) ? 'success' : 'danger';
+export const FormInput = ({ name, label, value, valid, feedback, type, autoComplete, handleChange }) => {
+  const feedbackColor = (valid === 'warning') ? 'warning' : (valid) ? 'success' : 'danger';
   return (
     <div className='row my-2'>
       <div className='col-10 mx-auto'>
         <label className='d-block'>
           <h6 className="d-inline">{label}</h6>
-          <span className={`text-${feedbackColor} pl-1 pl-md-2`}>{data.feedback}</span>
+          <span className={`text-${feedbackColor} pl-1 pl-md-2`}>{feedback}</span>
         </label>
         <input
           className='form-control'
           autoComplete={autoComplete || 'off'}
           type={type || 'text'}
           name={name}
-          value={data.value}
+          value={value}
           onChange={handleChange}
         />
       </div>

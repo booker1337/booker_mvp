@@ -1,12 +1,36 @@
-function usernameIsPresent(username) {
+const usernameIsPresent = (username, signal) => ( 
+  fetch(`/valid/isUsernamePresent/${username}`, { signal })
+    .then(async res => {
+      if(res.ok) {
+        const body = await res.json();
+        return body.present;
+      }
+      else {
+        const { errors } = await res.json();
+        console.log(errors);
+      }
+    })
+    .catch()
+);
 
-}
+const emailIsPresent = (email, signal) => ( 
+  fetch(`/valid/isEmailPresent/${email}`, { signal })
+    .then(async res => {
+      if(res.ok) {
+        const body = await res.json();
+        return body.present;
+      }
+      else {
+        const { errors } = await res.json();
+        console.log(errors);
+      }
+    })
+    .catch()
+);
 
-function emailIsPresent(email) {
+async function signupUsernameIsValid(username, values, validation, signal) {
+  console.log(signal);
 
-}
-
-function signupUsernameIsValid(username) {
   if(username === '')
     return [false, 'required']
 
@@ -17,23 +41,35 @@ function signupUsernameIsValid(username) {
     return [false, 'too long'];
 
   if(!username.match(/^\w*$/))
-    return [false, 'contains invalid characters'];
+    return [false, 'invalid symbols'];
 
-  // check if username is available
+  if(await usernameIsPresent(username, signal)) {
+    return [false, 'already taken']
+  }
 
-  return [true];
+  return [true, 'valid'];
 }
 
-function signupEmailIsValid(email) {
+async function signupEmailIsValid(email, values, validation, signal) {
+  if(await emailIsPresent(email, signal)) {
+    return [false, 'already taken']
+  }
+
+  return [true, 'valid'];
+}
+
+async function signupPasswordIsValid(password, values, validation, signal) {
+  if(password.length < 3)
+    return [false, 'too short'];
   
+  return [true, 'valid'];
 }
 
-function signupPasswordIsValid(password) {
-  
-}
+async function signupConfirmationIsValid(confirmation, values, validation, signal) {
+  if(values.password !== confirmation)
+    return [false, 'must match'];
 
-function signupConfirmationIsValid(confirmation) {
-
+  return [true, 'valid'];
 }
 
 // all validation functions return [isValid, feedback]
