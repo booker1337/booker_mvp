@@ -1,56 +1,44 @@
-import React, { useState } from 'react';
-import Auth from '../Auth/Auth';
+import React from 'react';
+import { FormTemplate } from '../Form/Form';
+import ValidForm from '../ValidForm/ValidForm';
+import { signup as validation } from '../../utils/validationService';
 
 const SignupPage = ({ signup }) => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-  });
-
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    signup(formData);
-  };
-
   return (
-    <Auth.Template linkTo={'/login'} linkText="Already have a booker account?">
-      <Auth.Form
+    <FormTemplate linkTo={'/login'} linkText="Already have a booker account?">
+      <ValidForm
         title="Join Booker"
         actionText="get started"
-        handleSubmit={handleSubmit}
-      >
-        <Auth.FormInput
-          name="username"
-          label="Username"
-          value={formData.username}
-          type="text"
-          autoComplete="username"
-          handleChange={handleChange}
-        />
-
-        <Auth.FormInput
-          name="email"
-          label="Email"
-          value={formData.email}
-          type="email"
-          autoComplete="email"
-          handleChange={handleChange}
-        />
-
-        <Auth.FormInput
-          name="password"
-          label="Password"
-          value={formData.password}
-          type="password"
-          autoComplete="current-password"
-          handleChange={handleChange}
-        />
-      </Auth.Form>
-    </Auth.Template>
-  );
+        action={signup}
+        fields={{
+          username: {
+            label: "Username",
+            type: "text",
+            autoComplete: "username",
+            validation: validation.validateUsername
+          },
+          email: {
+            label: "Email",
+            type: "email",
+            autoComplete: "email",
+            validation: validation.validateEmail
+          },
+          password: {
+            label: "Password",
+            type: "password",
+            autoComplete: "current-password",
+            validation: validation.validatePassword
+          },
+          confirmation: {
+            label: "Confirm Password",
+            type: "password",
+            autoComplete: "current-password",
+            validation: validation.validateConfirmation
+          }
+        }}
+      />
+    </FormTemplate>
+  )
 };
 
 export default SignupPage;
