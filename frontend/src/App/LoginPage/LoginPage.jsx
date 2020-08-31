@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const LoginPage = React.memo(({ login }) => {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-  });
+  // const [formData, setFormData] = useState({
+  //   username: '',
+  //   password: '',
+  // });
 
   // const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 

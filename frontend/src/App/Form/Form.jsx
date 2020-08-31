@@ -23,11 +23,12 @@ export const FormInput = ({ name, label, value, valid, feedback, type, autoCompl
   );
 };
 
-export const Form = ({ children, title, actionText, handleSubmit }) => (
+export const Form = ({ children, title, actionText, handleSubmit, errorMessage }) => (
   <form onSubmit={handleSubmit} className='m-4 p-3'>
     <h4 className='pb-2 text-center'>{title}</h4>
     {children}
-    <div className='d-flex justify-content-center mt-5'>
+    <p className="text-danger text-center">{errorMessage}</p>
+    <div className='d-flex justify-content-center mt-4'>
       <input
         className='btn btn-primary text-uppercase'
         type='submit'

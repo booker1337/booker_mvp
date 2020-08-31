@@ -10,7 +10,7 @@ const usernameIsPresent = (username, signal) => (
         console.log(errors);
       }
     })
-    .catch()
+    .catch(err => {})
 );
 
 const emailIsPresent = (email, signal) => ( 
@@ -25,7 +25,7 @@ const emailIsPresent = (email, signal) => (
         console.log(errors);
       }
     })
-    .catch()
+    .catch(err => {})
 );
 
 async function signupUsernameIsValid(username, values, validation, signal) {
@@ -51,6 +51,9 @@ async function signupUsernameIsValid(username, values, validation, signal) {
 }
 
 async function signupEmailIsValid(email, values, validation, signal) {
+  if(email === '')
+    return [false, 'required']
+
   if(await emailIsPresent(email, signal)) {
     return [false, 'already taken']
   }

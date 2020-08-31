@@ -3,6 +3,8 @@ import { Form, FormInput } from '../Form/Form';
 
 const ValidForm = ({ title, actionText, action, fields, validationDelay }) => {
   const fieldnames = Object.keys(fields);
+
+  const [errorMessage, setErrorMessage] = useState('');
   
   const [values, setValues] = useState(
     fieldnames
@@ -14,7 +16,7 @@ const ValidForm = ({ title, actionText, action, fields, validationDelay }) => {
   const [validation, setValidation] = useState(
     fieldnames
       .reduce((data, fieldname) => ({ ...data,
-        [fieldname]: { valid: true, feedback: '' }
+        [fieldname]: { valid: false, feedback: '' }
       }), {})
   );
 
@@ -64,7 +66,7 @@ const ValidForm = ({ title, actionText, action, fields, validationDelay }) => {
     timeoutId = setTimeout(async () => {
       const [valid, feedback] = await validator(value, values, validation, abortController.signal);
       validationSetter(valid, feedback);
-    }, validationDelay || 1000/3);
+    }, validationDelay || 1000/5);
 
     valueSetter(value, timeoutId, abortController);
   };
@@ -83,9 +85,14 @@ const ValidForm = ({ title, actionText, action, fields, validationDelay }) => {
     }), {})
   );
 
+  const checkValid = () => fieldnames.reduce((valid, fieldname) => valid && validation[fieldname].valid, true);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    action(values);
+    if(checkValid())
+      action(values, setErrorMessage);
+    else
+      setErrorMessage('The form is not valid');
   };
 
   const renderField = (fieldname) => (
@@ -107,6 +114,7 @@ const ValidForm = ({ title, actionText, action, fields, validationDelay }) => {
       title={title}
       actionText={actionText}
       handleSubmit={handleSubmit}
+      errorMessage={errorMessage}
     >
       {fieldnames.map(renderField)}
     </Form>
