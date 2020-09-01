@@ -58,6 +58,7 @@ function App() {
 
           <Route> <NotFoundPage /> </Route>
         </Switch>
+      </Router>
     </div>
   );
 }
