@@ -86,14 +86,14 @@ async function loginLoginIdIsValid(loginId, values, validation, signal)  {
   if(loginId === '')
     return [false, 'required'];
 
-  if(username.length < 3)
+  if(loginId.length < 3)
     return [false, 'too short'];
 
-  if(!username.match(/^\w*$/))
+  if(!loginId.match(/^\w*$/))
     return [false, 'invalid symbols'];
 
-  if(email.indexOf("@") < 1 || email.lastIndexOf(".") < email.indexOf("@") + 2 || email.lastIndexOf(".") + 2 >= email.length)
-      return [false, 'incorrect email'];
+  if(loginId.indexOf("@") < 1 || loginId.lastIndexOf(".") < loginId.indexOf("@") + 2 || loginId.lastIndexOf(".") + 2 >= loginId.length)
+      return [false, 'incorrect username or email'];
 
   return [true, 'valid'];
 }
