@@ -52,12 +52,12 @@ async function signupEmailIsValid(email, values, validation, signal) {
   if(email === '')
     return [false, 'required'];
 
+  if(email.indexOf("@") < 1 || email.lastIndexOf(".") < email.indexOf("@") + 2 || email.lastIndexOf(".") + 2 >= email.length)
+    return [false, 'incorrect email'];
+
   if(await emailIsPresent(email, signal)) {
     return [false, 'already taken'];
   }
-
-  if(email.indexOf("@") < 1 || email.lastIndexOf(".") < email.indexOf("@") + 2 || email.lastIndexOf(".") + 2 >= email.length)
-    return [false, 'incorrect email'];
 
   return [true, 'valid'];
 }
@@ -82,8 +82,8 @@ async function signupConfirmationIsValid(confirmation, values, validation, signa
   return [true, 'valid'];
 }
 
-async function loginLoginIdIsValid(username, email, values, validation, signal)  {
-  if(username === '' || email === '')
+async function loginLoginIdIsValid(loginId, values, validation, signal)  {
+  if(loginId === '')
     return [false, 'required'];
 
   if(username.length < 3)
@@ -110,7 +110,6 @@ async function loginPasswordIsValid(password, values, validation, signal) {
   
   return [true, 'valid'];
 }
-
 
 // all validation functions return [isValid, feedback]
 export const signup = {
