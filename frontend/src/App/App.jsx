@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
 import authService from '../utils/authService';
-import "./App.css";
+import './App.css';
 
 import NavBar from './NavBar/NavBar';
 import Hamburger from './Hamburger/Hamburger';
@@ -20,10 +20,10 @@ const AuthRoute = ({ ...props }) => (
 );
 
 function App() {
-  const [user, setUser] = useState(authService.getUser() || undefined);
-  const [HamburgerOpen, setHamburgerOpen] = useState(false);
+  const [user, setUser] = useState(authService.getLocalUser() || undefined);
+  const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
-  const HamburgerToggleClickHandler = () => setHamburgerOpen(!HamburgerOpen);
+  const hamburgerToggleClickHandler = () => setHamburgerOpen(!hamburgerOpen);
 
   const history = useHistory();
 
@@ -32,31 +32,31 @@ function App() {
 
   return (
     <div className="App" style={{height: '100%'}}>
-      <NavBar HamburgerClickHandler={this.HamburgerToggleClickHandler} />
-      <Hamburger show={this.state.HamburgerOpen} click={this.HamburgerToggleClickHandler} />
-        <Switch>
-          <Route exact path="/">
-            <div>Landing Page</div>
-          </Route>
+      <NavBar hamburgerClickHandler={hamburgerToggleClickHandler} />
+      <Hamburger show={hamburgerOpen} click={hamburgerToggleClickHandler} />
+      <Switch>
+        <Route exact path="/">
+          <div>Landing Page</div>
+        </Route>
 
-          <Route path="/login">
-            <LoginPage login={login}/>
-          </Route>
+        <Route path="/login">
+          <LoginPage login={login}/>
+        </Route>
 
-          <Route path="/signup">
-            <SignupPage signup={signup}/>
-          </Route>
+        <Route path="/signup">
+          <SignupPage signup={signup}/>
+        </Route>
 
-          <AuthRoute path="/start" user={user}>
-            <div>Onboarding Page</div>
-          </AuthRoute>
+        <AuthRoute path="/start" user={user}>
+          <div>Onboarding Page</div>
+        </AuthRoute>
 
-          <AuthRoute path="/profile" user={user}>
-            <ProfilePage user={user} />
-          </AuthRoute>
+        <AuthRoute path="/profile" user={user}>
+          <ProfilePage user={user} />
+        </AuthRoute>
 
-          <Route> <NotFoundPage /> </Route>
-        </Switch>
+        <Route> <NotFoundPage /> </Route>
+      </Switch>
     </div>
   );
 }

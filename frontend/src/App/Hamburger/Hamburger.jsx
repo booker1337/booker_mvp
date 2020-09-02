@@ -1,22 +1,16 @@
 import React from 'react';
 import './Hamburger.css';
 
-export default function Hamburger() {
-    let HamburgerClasses = ['Hamburger'];
+const Hamburger = ({ show }) => (
+    <nav className={`Hamburger${show && ' open'}`}>
+        <ul>
+            <li><a href="/">Offers</a></li>
+            <li><a href="/">Offers</a></li>
+            <li><a href="/">Offers</a></li>
+            <li><a href="/">Offers</a></li>
+            <li><a href="/">Offers</a></li>
+        </ul>
+    </nav>
+);
 
-    if (props.show)  {
-        Hamburger = ['Hamburger', 'open'];
-    }   
-
-    return (
-        <nav className={HamburgerClasses}>
-            <ul>
-                <li><a href="/">Offers</a></li>
-                <li><a href="/">Offers</a></li>
-                <li><a href="/">Offers</a></li>
-                <li><a href="/">Offers</a></li>
-                <li><a href="/">Offers</a></li>
-            </ul>
-        </nav>
-    );
-}
+export default Hamburger;

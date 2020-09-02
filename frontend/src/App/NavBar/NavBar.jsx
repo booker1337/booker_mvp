@@ -3,7 +3,7 @@ import "./NavBar.css";
 
 import HamburgerToggle from '../Hamburger/HamburgerToggle';
 
-export default function NavBar() {
+export default function NavBar(props) {
   return (
       <header className="NavBar">
         <nav className="NavBar_Navigation">
@@ -19,7 +19,7 @@ export default function NavBar() {
               </ul>
             </div>
             <div className="NavBar_toggle-button">
-              <HamburgerToggle click={this.props.HamburgerToggleClickHandler} />
+              <HamburgerToggle click={props.hamburgerToggleClickHandler} />
             </div>
         </nav>
       </header>
