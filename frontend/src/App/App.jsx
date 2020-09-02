@@ -34,7 +34,6 @@ function App() {
     <div className="App" style={{height: '100%'}}>
       <NavBar HamburgerClickHandler={this.HamburgerToggleClickHandler} />
       <Hamburger show={this.state.HamburgerOpen} click={this.HamburgerToggleClickHandler} />
-      <Router>
         <Switch>
           <Route exact path="/">
             <div>Landing Page</div>
@@ -58,7 +57,6 @@ function App() {
 
           <Route> <NotFoundPage /> </Route>
         </Switch>
-      </Router>
     </div>
   );
 }

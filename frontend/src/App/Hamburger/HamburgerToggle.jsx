@@ -1,5 +1,5 @@
 import React from 'react';
-import './HambugerToggle.css';
+import './HamburgerToggle.css';
 
 export default function HamburgerToggle() {
     return (
