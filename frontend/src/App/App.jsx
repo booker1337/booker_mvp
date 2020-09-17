@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
 import authService from '../utils/authService';
+import './App.css';
+
+import NavBar from './NavBar/NavBar';
+import Hamburger from './Hamburger/Hamburger';
 
 import SignupPage from './SignupPage/SignupPage';
 import LoginPage from './LoginPage/LoginPage';
@@ -17,6 +21,9 @@ const AuthRoute = ({ ...props }) => (
 
 function App() {
   const [user, setUser] = useState(authService.getLocalUser() || undefined);
+  const [hamburgerOpen, setHamburgerOpen] = useState(false);
+
+  const hamburgerToggleClickHandler = () => setHamburgerOpen(!hamburgerOpen);
 
   const history = useHistory();
 
@@ -24,30 +31,32 @@ function App() {
   const signup = authService.getSignup(setUser, history);
 
   return (
-    <div className="App">
-        <Switch>
-          <Route exact path="/">
-            <div>Landing Page</div>
-          </Route>
+    <div className="App" style={{height: '100%'}}>
+      <NavBar hamburgerClickHandler={hamburgerToggleClickHandler} />
+      <Hamburger show={hamburgerOpen} click={hamburgerToggleClickHandler} />
+      <Switch>
+        <Route exact path="/">
+          <div>Landing Page</div>
+        </Route>
 
-          <Route path="/login">
-            <LoginPage login={login}/>
-          </Route>
+        <Route path="/login">
+          <LoginPage login={login}/>
+        </Route>
 
-          <Route path="/signup">
-            <SignupPage signup={signup}/>
-          </Route>
+        <Route path="/signup">
+          <SignupPage signup={signup}/>
+        </Route>
 
-          <AuthRoute path="/start" user={user}>
-            <div>Onboarding Page</div>
-          </AuthRoute>
+        <AuthRoute path="/start" user={user}>
+          <div>Onboarding Page</div>
+        </AuthRoute>
 
-          <AuthRoute path="/profile" user={user}>
-            <ProfilePage user={user} />
-          </AuthRoute>
+        <AuthRoute path="/profile" user={user}>
+          <ProfilePage user={user} />
+        </AuthRoute>
 
-          <Route> <NotFoundPage /> </Route>
-        </Switch>
+        <Route> <NotFoundPage /> </Route>
+      </Switch>
     </div>
   );
 }

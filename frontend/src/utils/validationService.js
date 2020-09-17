@@ -30,7 +30,7 @@ const emailIsPresent = (email, signal) => (
 
 async function signupUsernameIsValid(username, values, validation, signal) {
   if(username === '')
-    return [false, 'required']
+    return [false, 'required'];
 
   if(username.length < 3)
     return [false, 'too short'];
@@ -42,7 +42,7 @@ async function signupUsernameIsValid(username, values, validation, signal) {
     return [false, 'invalid symbols'];
 
   if(await usernameIsPresent(username, signal)) {
-    return [false, 'already taken']
+    return [false, 'already taken'];
   }
 
   return [true, 'valid'];
@@ -50,18 +50,27 @@ async function signupUsernameIsValid(username, values, validation, signal) {
 
 async function signupEmailIsValid(email, values, validation, signal) {
   if(email === '')
-    return [false, 'required']
+    return [false, 'required'];
+
+  if(email.indexOf("@") < 1 || email.lastIndexOf(".") < email.indexOf("@") + 2 || email.lastIndexOf(".") + 2 >= email.length)
+    return [false, 'incorrect email'];
 
   if(await emailIsPresent(email, signal)) {
-    return [false, 'already taken']
+    return [false, 'already taken'];
   }
 
   return [true, 'valid'];
 }
 
 async function signupPasswordIsValid(password, values, validation, signal) {
+  if(password === '')
+    return [false, 'required'];
+
   if(password.length < 3)
     return [false, 'too short'];
+
+  if(!password.match((/^\w*$/)))
+    return [false, ''];  
   
   return [true, 'valid'];
 }
@@ -73,6 +82,35 @@ async function signupConfirmationIsValid(confirmation, values, validation, signa
   return [true, 'valid'];
 }
 
+async function loginLoginIdIsValid(loginId, values, validation, signal)  {
+  if(loginId === '')
+    return [false, 'required'];
+
+  if(loginId.length < 3)
+    return [false, 'too short'];
+
+  if(!loginId.match(/^\w*$/))
+    return [false, 'invalid symbols'];
+
+  if(loginId.indexOf("@") < 1 || loginId.lastIndexOf(".") < loginId.indexOf("@") + 2 || loginId.lastIndexOf(".") + 2 >= loginId.length)
+      return [false, 'incorrect username or email'];
+
+  return [true, 'valid'];
+}
+
+async function loginPasswordIsValid(password, values, validation, signal) {
+  if(password === '')
+    return [false, 'required'];
+
+  if(password.length < 3)
+    return [false, 'too short'];
+
+  if(!password.match((/^\w*$/)))
+    return [false, ''];  
+  
+  return [true, 'valid'];
+}
+
 // all validation functions return [isValid, feedback]
 export const signup = {
   validateUsername: signupUsernameIsValid,
@@ -81,10 +119,10 @@ export const signup = {
   validateConfirmation: signupConfirmationIsValid
 };
 
-// export const login = {
-//   validateLoginId: loginLoginIdIsValid,
-//   validatePassword: loginPasswordIsValid
-// };
+ export const login = {
+   validateLoginId: loginLoginIdIsValid,
+   validatePassword: loginPasswordIsValid
+ };
 
 // export const profile = {
 
@@ -92,6 +130,6 @@ export const signup = {
 
 export default {
   signup,
-  // login,
+   login,
   // profile
 }

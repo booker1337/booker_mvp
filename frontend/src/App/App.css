@@ -1,8 +1,9 @@
-.App {
-  margin-top: 15px;
+html{
+  height: 100%;
 }
-  
-.App .navbar-brand {
-  font-weight: bold;
+body{
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100%;
 }
-
