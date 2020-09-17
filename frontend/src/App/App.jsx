@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+
 import authService from '../utils/authService';
 
 import SignupPage from './SignupPage/SignupPage';
@@ -7,49 +8,46 @@ import LoginPage from './LoginPage/LoginPage';
 import ProfilePage from './ProfilePage/ProfilePage';
 import NotFoundPage from './NotFoundPage/NotFoundPage';
 
-const PrivateRoute = ({ render, ...routeProps }) => (
-  <Route
-    {...routeProps}
-    render={routerProps => {
-      let component = render(routerProps);
-      if(!!component.props.user) return component;
-      else return <Redirect to="/signup" />;
-    }}
-  />
+// authenticated route
+const AuthRoute = ({ ...props }) => (
+  <Route {...props}>
+    {props.user ? props.children : <Redirect to="/signup" />}
+  </Route>
 );
 
 function App() {
   const [user, setUser] = useState(authService.getLocalUser() || undefined);
 
+  const history = useHistory();
+
+  const login = authService.getLogin(setUser, history);
+  const signup = authService.getSignup(setUser, history);
+
   return (
     <div className="App">
-      <Router>
         <Switch>
-          <Route exact path="/" render={props => <div>Landing Page</div>} />
-          <Route
-            path="/login"
-            render={(props) => <LoginPage login={authService.getLogin(setUser, props.history)}/>}
-          />
-          <Route path="/signup" render={(props) => <SignupPage signup={authService.getSignup(setUser, props.history)}/>} />
-          <Route path="/start" render={props => <div>Onboarding Page</div>} />
-          <PrivateRoute path="/profile" render={props => <ProfilePage user={user} history={props.history} />} />
-          <Route render={props => <NotFoundPage />} />
-          {/* <PrivateRoute
-            exact
-            path="/swipe"
-            render={() => <div>Swipe Page</div>}
-          /> */}
-          {/* <PrivateRoute
-            path="/matches"
-            render={() => <div>Matches Page</div>}
-          /> */}
-          {/* <PrivateRoute
-            path="/group/:groupName"
-            render={props => <div>Matches Page: {props.match.params.groupName}</div>}
-          /> */}
-        </Switch>
-      </Router>
+          <Route exact path="/">
+            <div>Landing Page</div>
+          </Route>
 
+          <Route path="/login">
+            <LoginPage login={login}/>
+          </Route>
+
+          <Route path="/signup">
+            <SignupPage signup={signup}/>
+          </Route>
+
+          <AuthRoute path="/start" user={user}>
+            <div>Onboarding Page</div>
+          </AuthRoute>
+
+          <AuthRoute path="/profile" user={user}>
+            <ProfilePage user={user} />
+          </AuthRoute>
+
+          <Route> <NotFoundPage /> </Route>
+        </Switch>
     </div>
   );
 }
